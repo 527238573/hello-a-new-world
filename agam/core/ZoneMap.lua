@@ -1,0 +1,1 @@
+Zonemap = class("Zonemap",{id = "none",width = 10,height = 10})
