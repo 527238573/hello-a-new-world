@@ -1,6 +1,7 @@
 
 
-scheduler = {}
+local scheduler = {}
+g.scheduler =scheduler
 
 local _time =0;
 local _events={}
