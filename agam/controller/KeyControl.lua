@@ -30,49 +30,51 @@ function keyControl.update(dt)
     if(keyControl.waitTimeLeft>0)  then return end
   end
   
-  local time =0
   for i=1,4 do
     if(love.keyboard.isDown(keyControl.priority[i])) then
       
       if(keyControl.priority[i] == "up") then
         if(love.keyboard.isDown("left")) then
-          time = player.doMove(-1,1)
+          g.raction.moveAction(-1,1)
         elseif(love.keyboard.isDown("right")) then
-          time = player.doMove(1,1)
+          g.raction.moveAction(1,1)
         else
-          time = player.doMove(0,1)
+          g.raction.moveAction(0,1)
         end
       elseif (keyControl.priority[i] =="down") then
         if(love.keyboard.isDown("left")) then
-          time = player.doMove(-1,-1)
+          g.raction.moveAction(-1,-1)
         elseif(love.keyboard.isDown("right")) then
-          time = player.doMove(1,-1)
+          g.raction.moveAction(1,-1)
         else
-          time = player.doMove(0,-1)
+          g.raction.moveAction(0,-1)
         end
       elseif (keyControl.priority[i] =="right") then
         if(love.keyboard.isDown("up")) then
-          time = player.doMove(1,1)
+          g.raction.moveAction(1,1)
         elseif(love.keyboard.isDown("down")) then
-          time = player.doMove(1,-1)
+          g.raction.moveAction(1,-1)
         else
-          time = player.doMove(1,0)
+          g.raction.moveAction(1,0)
         end
       elseif (keyControl.priority[i] =="left") then
         if(love.keyboard.isDown("up")) then
-          time = player.doMove(-1,1)
+          g.raction.moveAction(-1,1)
         elseif(love.keyboard.isDown("down")) then
-          time = player.doMove(-1,-1)
+          g.raction.moveAction(-1,-1)
         else
-          time = player.doMove(-1,0)
+          g.raction.moveAction(-1,0)
         end
       end
         
       break
     end
   end
-  
-    
-  keyControl.waitTimeLeft = keyControl.waitTimeLeft + time
   keyControl.waiting = keyControl.waitTimeLeft>0
+  if(keyControl.waiting == false)  then keyControl.waitTimeLeft = 0 end
+end
+
+
+function keyControl.lockTime(time)
+  keyControl.waitTimeLeft = keyControl.waitTimeLeft + time
 end

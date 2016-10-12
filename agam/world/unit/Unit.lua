@@ -1,4 +1,3 @@
-require"core/Action"
 
 Unit = class("Unit")
 Unit.layer = 5
@@ -60,9 +59,6 @@ function Unit:draw()
   
   local image = self.animeList[userate]
   
-  
-  
-  
   local drawx = self.x - 0.5 *self.animeList.width
   local drawy = self.y + self.animeList.height
   drawx,drawy = worldToScreen(drawx,drawy)
@@ -72,4 +68,13 @@ function Unit:draw()
   love.graphics.draw(image,drawx,drawy,0,scaleX,1)
 end
 
+
+
+
+function createUnit(animeName)
+  local u = Unit()
+  u.animeList = animeLists[animeName]
+  if(u.animeList == nil) then error("error animeName not found") end
+  return u
+end
 

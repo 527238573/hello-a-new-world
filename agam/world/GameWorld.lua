@@ -1,7 +1,3 @@
-require"world/camera"
-require"world/MapLayer"
-require"core/Unit"
-require"player/KeyControl"
 
 gameWorld = {}
 gameWorld.allActor = {}
@@ -36,7 +32,6 @@ function gameWorld.update(dt) -- 跟新所有对象
   for key,_ in pairs(gameWorld.allActor) do
     key:update(dt)
   end
-  
   camera.update(dt)
 end
 

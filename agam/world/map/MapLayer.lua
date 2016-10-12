@@ -1,4 +1,4 @@
-require"core/ZoneMap"
+require"world/map/ZoneMap"
 
 ONE_PIECE = 64
 

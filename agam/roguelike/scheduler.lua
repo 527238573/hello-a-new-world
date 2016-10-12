@@ -6,32 +6,20 @@ g.scheduler =scheduler
 local _time =0;
 local _events={}
 local _eventTimes={}
-local _repeat = {}
 local _current = nil;
-local _defaultDuration =1
-local _duration = _defaultDuration
 
 function scheduler.getTime()
   return _time
 end
 
-
-
-local function addToEvents(event,time)
+function scheduler.add(item,time)
   local index =1
   for i=1,#_eventTimes do
     if _eventTimes[i]>time then index = i break end
     index = index +1
   end
-  table.insert(_events, index, event)
-	table.insert(_eventTimes, index, event)
-end
-
-
-function scheduler.add(item,repeating,time)
-  time = time or _defaultDuration
-  addToEvents(item,time)
-  if(repeating) then table.insert(_repeat, item) end
+  table.insert(_events, index, item)
+	table.insert(_eventTimes, index, time)
 end
 
 local function indexOf(list,item)
@@ -43,13 +31,10 @@ end
 
 --返回true或false
 function scheduler.remove(item)
-  if item==_current then 
+  if item==_current then
     _current =nil
-    _duration=_defaultDuration
   end
-  local index = indexOf(_repeat,item)
-  if index~=0 then table.remove(_repeat, index) end
-  index=indexOf(_events, item)
+  local index=indexOf(_events, item)
   if index ==0 then return false end
   table.remove(_events, index)
 	table.remove(_eventTimes, index)
@@ -60,19 +45,13 @@ end
 function scheduler.clear()
   _events={}
   _eventTimes={}
-  _repeat={}
   _current = nil
-  _duration = _defaultDuration
 end
 
 --返回该item
 function scheduler.next()
-  if(_current) and indexOf(_repeat, _current)~=0 then--重插入
-    addToEvents(_current,_duration or _defaultDuration)
-    _duration=_defaultDuration
-  end
   if #_events>0 then 
-      local time = table.remove(_eventTimes, 1)
+    local time = table.remove(_eventTimes, 1)
     if time>0 then
       _time=_time+time
       for i=1,#_eventTimes do
@@ -88,7 +67,7 @@ end
 
 
 function scheduler.setDuration(time)
-  if _current then _duration=time end
+  if _current then scheduler.add(_current,time) end
 end
 
 

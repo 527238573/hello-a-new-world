@@ -1,11 +1,13 @@
 class = require "30log"
-require "world/GameWorld"
+require "z_util/help"
+require "world/rtEnter"
 
 
 function love.load()
    if arg and arg[#arg] == "-debug" then require("mobdebug").start() end
-   require"player/Player"
    
+   loadRT()
+   initRT()
    
    local f = love.graphics.newFont("assets/ZhunYuan_.ttf",24);
    love.graphics.setFont(f)

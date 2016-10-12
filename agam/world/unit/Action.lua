@@ -31,3 +31,6 @@ function Action:applyAction(unit)
   local rate  = unit.actionPastTime/self.time
   self:applyByRate(unit,rate)
 end
+
+
+

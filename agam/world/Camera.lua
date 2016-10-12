@@ -23,5 +23,5 @@ end
 
 
 function camera.update(dt)
-  setCameraXY(player.unit.x,player.unit.y)
+  setCameraXY(movie.plu.x,movie.plu.y)
 end
