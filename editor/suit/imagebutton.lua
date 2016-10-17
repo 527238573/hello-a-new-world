@@ -2,13 +2,6 @@
 
 local BASE = (...):match('(.-)[^%.]+$')
 
-local btn_img = love.graphics.newImage("suit/assets/button.png")
-local quads = 
-{
-  normal = love.graphics.newQuad(0,0,75,23,btn_img:getDimensions()),
-  hovered= love.graphics.newQuad(0,23,75,23,btn_img:getDimensions()),
-  active = love.graphics.newQuad(0,46,75,23,btn_img:getDimensions())
-}
 
 local function defaultDraw(opt,x,y, r,g,b,a)
   local img = opt.normal

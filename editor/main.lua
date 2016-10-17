@@ -28,8 +28,8 @@ function love.update(dt)
         love.event.quit()
     end
     
-    suit.Button("Close2", 200,150,200,70)
-    
+    --suit.Button("Close2", 200,150,200,70)
+    suit.S9Button("Close2", 200,150,75,20)
     
      suit.layout:row()
 

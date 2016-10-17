@@ -22,6 +22,8 @@ function suit.new(theme)
 		Checkbox = require(BASE.."checkbox"),
 		Input = require(BASE.."input"),
 		Slider = require(BASE.."slider"),
+    S9Button = require(BASE.."s9button"),
+    
 
 		layout = require(BASE.."layout").new(),
 	}, suit)

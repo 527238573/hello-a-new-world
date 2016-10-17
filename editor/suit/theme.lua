@@ -19,7 +19,6 @@ function theme.getColorForState(opt)
 end
 
 function theme.drawBox(x,y,w,h, colors, cornerRadius)
-	local colors = colors or theme.getColorForState(opt)
 	cornerRadius = cornerRadius or theme.cornerRadius
 	w = math.max(cornerRadius/2, w)
 	if h < cornerRadius/2 then
@@ -43,8 +42,27 @@ end
 
 
 
-function theme.drawScale9Quad(img,quad,w,h,x,y,top,bottom,left,right)
+function theme.drawScale9Quad(s9t,x,y,w,h)
+  local img = s9t.img
+  local top,bottom,left,right = s9t.top,s9t.bottom,s9t.left,s9t.right
+  if w<left+right then w= left+right+1 end
+  if h<top+bottom then h= top+bottom+1 end
+  local midw = w-left-right
+  local midh = h-top -bottom
+  local scale_midx = midw/s9t.midw
+  local scale_midy = midh/s9t.midh
   
+  love.graphics.draw(img,s9t[1],x,y)
+  love.graphics.draw(img,s9t[2],x+left,y,0,scale_midx,1)
+  love.graphics.draw(img,s9t[3],x+left+midw,y)
+  
+  love.graphics.draw(img,s9t[4],x,y+top,0,1,scale_midy)
+  love.graphics.draw(img,s9t[5],x+left,y+top,0,scale_midx,scale_midy)
+  love.graphics.draw(img,s9t[6],x+left+midw,y+top,0,1,scale_midy)
+  
+  love.graphics.draw(img,s9t[7],x,y+top+midh)
+  love.graphics.draw(img,s9t[8],x+left,y+top+midh,0,scale_midx,1)
+  love.graphics.draw(img,s9t[9],x+left+midw,y+top+midh)
 end
 
 return theme
