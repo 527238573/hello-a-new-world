@@ -5,6 +5,8 @@ local suit = require 'suit'
 local input = {text = ""}
 local slider = {value = 1, max = 2}
 local checkbox = {text = "asdasd2"}
+
+local subwin = {x=400,y=130}
 -- all the UI is defined in love.update or functions that are called from here
 function love.update(dt)
     -- put the layout origin at position (100,100)
@@ -28,8 +30,7 @@ function love.update(dt)
         love.event.quit()
     end
     
-    --suit.Button("Close2", 200,150,200,70)
-    suit.S9Button("Close2", 200,150,75,20)
+    
     
      suit.layout:row()
 
@@ -38,6 +39,13 @@ function love.update(dt)
     
     suit.layout:row()
     suit.Checkbox(checkbox, suit.layout:row(200,30))
+    
+    
+    suit.DragArea(subwin,true)
+    suit.Dialog("dig1",subwin.x,subwin.y, 300,300)
+    suit.DragArea(subwin,false,subwin.x,subwin.y,300,30)
+    --suit.Button("Close2", 200,150,200,70)
+    suit.S9Button("Close2", subwin.x+10,subwin.y+50,80,30)
     
 end
 

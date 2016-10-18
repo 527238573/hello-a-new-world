@@ -23,7 +23,8 @@ function suit.new(theme)
 		Input = require(BASE.."input"),
 		Slider = require(BASE.."slider"),
     S9Button = require(BASE.."s9button"),
-    
+    Dialog = require(BASE.."dialog"),
+    DragArea = require(BASE.."dragArea"),
 
 		layout = require(BASE.."layout").new(),
 	}, suit)

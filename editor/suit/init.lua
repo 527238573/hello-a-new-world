@@ -46,7 +46,8 @@ return setmetatable({
 	Input = function(...) return instance:Input(...) end,
 	Slider = function(...) return instance:Slider(...) end,
   S9Button = function(...) return instance:S9Button(...) end,
-  
+  Dialog = function(...) return instance:Dialog(...) end,
+  DragArea = function(...) return instance:DragArea(...) end,
 
 	-- layout
 	layout = instance.layout
