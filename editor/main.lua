@@ -7,6 +7,9 @@ local slider = {value = 1, max = 2}
 local checkbox = {text = "asdasd2"}
 
 local subwin = {x=400,y=130}
+
+local mpos = {x=0,y=0}
+
 -- all the UI is defined in love.update or functions that are called from here
 function love.update(dt)
     -- put the layout origin at position (100,100)
@@ -19,7 +22,7 @@ function love.update(dt)
     -- put a label that displays the text below the first cell
     -- the cell size is the same as the last one (200x30 px)
     -- the label text will be aligned to the left
-    suit.Label("Hello, "..input.text, {align = "left"}, suit.layout:row())
+    suit.Label("Hello, "..tostring(subwin)..input.text, {align = "left"}, suit.layout:row())
 
     -- put an empty cell that has the same size as the last cell (200x30 px)
     suit.layout:row()
@@ -47,11 +50,16 @@ function love.update(dt)
     --suit.Button("Close2", 200,150,200,70)
     suit.S9Button("Close2", subwin.x+10,subwin.y+50,80,30)
     
+    
+    mpos.x = love.mouse.getX()
+    mpos.y = love.mouse.getY()
 end
 
 function love.draw()
     -- draw the gui
     suit.draw()
+    
+   -- love.graphics.circle("fill", mpos.x, mpos.y, 5, 6)
 end
 
 function love.textinput(t)

@@ -86,7 +86,7 @@ end
 
 function suit:registerMouseHit(opt,id, ul_x, ul_y, hit)
 	if hit(self.mouse_x - ul_x, self.mouse_y - ul_y) then
-    if(self.hovered ~= nil) then
+    if(self.hovered ~= nil and self.hoverOpt ~= nil) then
       if(self.hoverOpt.state == "hovered") then self.hoverOpt.state = "normal" end
     end
 		self.hovered = id

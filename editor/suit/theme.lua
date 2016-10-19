@@ -39,8 +39,8 @@ function theme.getVerticalOffsetForAlign(valign, font, h)
 	return (h - font:getHeight()) / 2
 end
 
-
-
+theme.defalut_img = love.graphics.newImage("suit/assets/button.png")
+theme.spriteBatch = love.graphics.newSpriteBatch(theme.defalut_img,50,"stream")
 
 function theme.drawScale9Quad(s9t,x,y,w,h)
   local img = s9t.img
@@ -52,17 +52,22 @@ function theme.drawScale9Quad(s9t,x,y,w,h)
   local scale_midx = midw/s9t.midw
   local scale_midy = midh/s9t.midh
   
-  love.graphics.draw(img,s9t[1],x,y)
-  love.graphics.draw(img,s9t[2],x+left,y,0,scale_midx,1)
-  love.graphics.draw(img,s9t[3],x+left+midw,y)
+  theme.spriteBatch:clear()
+  theme.spriteBatch:setTexture(img)
+  theme.spriteBatch:add(s9t[1],x,y)
+  theme.spriteBatch:add(s9t[2],x+left,y,0,scale_midx,1)
+  theme.spriteBatch:add(s9t[3],x+left+midw,y)
   
-  love.graphics.draw(img,s9t[4],x,y+top,0,1,scale_midy)
-  love.graphics.draw(img,s9t[5],x+left,y+top,0,scale_midx,scale_midy)
-  love.graphics.draw(img,s9t[6],x+left+midw,y+top,0,1,scale_midy)
+  theme.spriteBatch:add(s9t[4],x,y+top,0,1,scale_midy)
+  theme.spriteBatch:add(s9t[5],x+left,y+top,0,scale_midx,scale_midy)
+  theme.spriteBatch:add(s9t[6],x+left+midw,y+top,0,1,scale_midy)
   
-  love.graphics.draw(img,s9t[7],x,y+top+midh)
-  love.graphics.draw(img,s9t[8],x+left,y+top+midh,0,scale_midx,1)
-  love.graphics.draw(img,s9t[9],x+left+midw,y+top+midh)
+  theme.spriteBatch:add(s9t[7],x,y+top+midh)
+  theme.spriteBatch:add(s9t[8],x+left,y+top+midh,0,scale_midx,1)
+  theme.spriteBatch:add(s9t[9],x+left+midw,y+top+midh)
+  theme.spriteBatch:flush()
+  love.graphics.draw(theme.spriteBatch,0,0)
+  
 end
 
 return theme
