@@ -43,6 +43,7 @@ return function(core, checkbox, ...)
 	return {
 		id = opt.id,
 		hit = hit,
+    active = core:isActive(opt.id),
 		hovered = core:isHovered(opt.id) and core:wasHovered(opt.id),
     wasHovered = core:wasHovered(opt.id)
 	}

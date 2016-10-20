@@ -24,6 +24,7 @@ return function(core, idtext, ...)
 	return {
 		id = opt.id,
 		hit = core:mouseReleasedOn(opt.id),
+    active = core:isActive(opt.id),
 		hovered = core:isHovered(opt.id) and core:wasHovered(opt.id),
     wasHovered = core:wasHovered(opt.id)
 	}

@@ -137,6 +137,7 @@ return function(core, input, ...)
 	return {
 		id = opt.id,
 		hit = core:mouseReleasedOn(opt.id),
+    active = core:isActive(opt.id),
 		submitted = core:keyPressedOn(opt.id, "return"),
 		hovered = core:isHovered(opt.id) and core:wasHovered(opt.id),
     wasHovered = core:wasHovered(opt.id)

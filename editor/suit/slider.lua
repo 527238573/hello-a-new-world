@@ -72,6 +72,7 @@ return function(core, info, ...)
 	return {
 		id = opt.id,
 		hit = core:mouseReleasedOn(opt.id),
+    active = core:isActive(opt.id),
 		changed = value_changed,
 		hovered = core:isHovered(opt.id) and core:wasHovered(opt.id),
     wasHovered = core:wasHovered(opt.id)
