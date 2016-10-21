@@ -38,9 +38,9 @@ return setmetatable({
 	registerDraw = function(...) return instance:registerDraw(...) end,
 	draw = function(...) return instance:draw(...) end,
 
+  combineState = function(...) return instance:combineState(...) end,
 	-- widgets
 	Button = function(...) return instance:Button(...) end,
-	ImageButton = function(...) return instance:ImageButton(...) end,
 	Label = function(...) return instance:Label(...) end,
 	Checkbox = function(...) return instance:Checkbox(...) end,
 	Input = function(...) return instance:Input(...) end,
@@ -48,6 +48,8 @@ return setmetatable({
   S9Button = function(...) return instance:S9Button(...) end,
   Dialog = function(...) return instance:Dialog(...) end,
   DragArea = function(...) return instance:DragArea(...) end,
+  Image = function(...) return instance:Image(...) end,
+  ImageButton = function(...) return instance:ImageButton(...) end,
 
 	-- layout
 	layout = instance.layout

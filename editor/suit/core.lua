@@ -17,7 +17,6 @@ function suit.new(theme)
 		draw_queue = {n = 0},
 
 		Button = require(BASE.."button"),
-		ImageButton = require(BASE.."imagebutton"),
 		Label = require(BASE.."label"),
 		Checkbox = require(BASE.."checkbox"),
 		Input = require(BASE.."input"),
@@ -25,6 +24,8 @@ function suit.new(theme)
     S9Button = require(BASE.."s9button"),
     Dialog = require(BASE.."dialog"),
     DragArea = require(BASE.."dragArea"),
+    Image = require(BASE.."image"),
+    ImageButton = require(BASE.."imagebutton"),
 
 		layout = require(BASE.."layout").new(),
 	}, suit)
@@ -200,5 +201,19 @@ function suit:draw()
 	self.draw_queue.n = 0
 	self:enterFrame()
 end
+
+
+function suit:combineState(parentid,...)
+  local list = {...}
+  local state ={id = parentid,hit = false, active = false, hovered = false, wasHovered = false}
+  for i=1,#list do 
+    state.hit = state.hit or list[i].hit 
+    state.active = state.active or list[i].active 
+    state.hovered = state.hovered or list[i].hovered 
+    state.wasHovered = state.wasHovered or list[i].wasHovered 
+  end
+  return state
+end
+
 
 return suit

@@ -16,8 +16,20 @@ local function defaultDraw(opt,quads,x,y,scalex,scaley)
   else
     love.graphics.draw(quads.img,todraw,x,y,0,scalex,scaley)
   end
-
 end
+
+local function defaultS9Draw(opt,quads,x,y,w,h,theme)
+  local todraw = quads.normal
+  if opt.state == "active" then
+    todraw = quads.active
+  elseif opt.state == "hovered" then
+    todraw = quads.hovered
+  end
+  love.graphics.setColor(255,255,255)
+  theme.drawScale9Quad(todraw,x,y,w,h)
+end
+
+
 
 
 return function(core, quads, ...)
@@ -29,19 +41,26 @@ return function(core, quads, ...)
   assert(quads.normal, "Need at least `normal' state image")
 
   local f1,f2,imgw,imgh
+  local is_s9 = false
 
   if quads.normal:typeOf("Image")  then 
     imgw = quads.normal:getWidth()
     imgh = quads.normal:getHeight()
-  else
+  elseif quads.normal:typeOf("Quad") then
     f1,f2,imgw,imgh = quads.normal:getViewport()
+  else
+    is_s9 = true -- scale9table
+    imgw = quads.normal.w
+    imgh = quads.normal.h
   end
   w = w or imgw
   h = h or imgh
-
-
   opt.state = core:registerHitbox(opt,opt.id, x,y,w,h)
-  core:registerDraw(opt.draw or defaultDraw, opt, quads,x,y,w/imgw,h/imgh)
+  if is_s9 then
+    core:registerDraw(opt.draw or defaultS9Draw, opt, quads,x,y,w,h,core.theme)
+  else
+    core:registerDraw(opt.draw or defaultDraw, opt, quads,x,y,w/imgw,h/imgh)
+  end
 
   return {
     id = opt.id,
