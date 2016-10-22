@@ -26,6 +26,7 @@ function suit.new(theme)
     DragArea = require(BASE.."dragArea"),
     Image = require(BASE.."image"),
     ImageButton = require(BASE.."imagebutton"),
+    ScrollBar = require(BASE.."scrollBar"),
 
 		layout = require(BASE.."layout").new(),
 	}, suit)

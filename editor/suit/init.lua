@@ -50,6 +50,7 @@ return setmetatable({
   DragArea = function(...) return instance:DragArea(...) end,
   Image = function(...) return instance:Image(...) end,
   ImageButton = function(...) return instance:ImageButton(...) end,
+  ScrollBar = function(...) return instance:ScrollBar(...) end,
 
 	-- layout
 	layout = instance.layout

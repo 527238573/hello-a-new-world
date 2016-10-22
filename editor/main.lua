@@ -7,6 +7,7 @@ local slider = {value = 1, max = 2}
 local checkbox = {text = "asdasd2"}
 
 local subwin = {x=400,y=130}
+local myScroll = {min = 0,max = 100,value =0,opt ={id={},vertical = true}}
 
 local mpos = {x=0,y=0}
 
@@ -50,9 +51,9 @@ function love.update(dt)
     --suit.Button("Close2", 200,150,200,70)
     suit.S9Button("Close2", subwin.x+10,subwin.y+50,80,30)
     
+    suit.ScrollBar(myScroll,myScroll.opt, subwin.x+10,subwin.y+90,200,17)
     
-    mpos.x = love.mouse.getX()
-    mpos.y = love.mouse.getY()
+    
 end
 
 function love.draw()

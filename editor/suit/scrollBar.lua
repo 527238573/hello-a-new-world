@@ -1,5 +1,5 @@
 local BASE = (...):match('(.-)[^%.]+$')
-
+local s9util = require(BASE.."s9util")
 
 local up_img = love.graphics.newImage("suit/assets/scroll$up.png")
 local down_img = love.graphics.newImage("suit/assets/scroll$down.png")
@@ -27,75 +27,85 @@ local right_quads=create_btn_table(right_img)
 local vbar_quads=
 {
   img = vbar_img,
-  normal = love.graphics.newQuad(0,0,17,21,17,63),
-  hovered= love.graphics.newQuad(0,21,17,21,17,63),
-  active = love.graphics.newQuad(0,42,17,21,17,63)
+  normal = s9util.createS9Table(vbar_img,0,0,17,21,3,3,3,3),
+  hovered= s9util.createS9Table(vbar_img,0,21,17,21,3,3,3,3),
+  active = s9util.createS9Table(vbar_img,0,42,17,21,3,3,3,3)
 }
 local hbar_quads=
 {
   img = hbar_img,
-  normal = love.graphics.newQuad(0,0,21,17,21,51),
-  hovered= love.graphics.newQuad(0,17,21,17,21,51),
-  active = love.graphics.newQuad(0,34,21,17,21,51)
+  normal = s9util.createS9Table(hbar_img,0,0,21,17,3,3,3,3),
+  hovered= s9util.createS9Table(hbar_img,0,17,21,17,3,3,3,3),
+  active = s9util.createS9Table(hbar_img,0,34,21,17,3,3,3,3)
 }
 
 
-local function defaultDraw(fraction, opt, x,y,w,h,theme)
-  local xb, yb, wb, hb -- size of the progress bar
-  local r =  math.min(w,h) / 2.1
-  if opt.vertical then
-    x, w = x + w*.25, w*.5
-    xb, yb, wb, hb = x, y+h*(1-fraction), w, h*fraction
-  else
-    y, h = y + h*.25, h*.5
-    xb, yb, wb, hb = x,y, w*fraction, h
-  end
-
-  local c = theme.getColorForState(opt)
-  theme.drawBox(x,y,w,h, c, opt.cornerRadius)
-  theme.drawBox(xb,yb,wb,hb, {bg=c.fg}, opt.cornerRadius)
-
-  if opt.state ~= nil and opt.state ~= "normal" then
-    love.graphics.setColor((opt.color and opt.color.active or {}).fg or theme.color.active.fg)
-    if opt.vertical then
-      love.graphics.circle('fill', x+wb/2, yb, r)
-    else
-      love.graphics.circle('fill', x+wb, yb+hb/2, r)
-    end
-  end
-end
 
 return function(core, info, ...)
   local opt, x,y,w,h = core.getOptionsAndSize(...)
   opt.id = opt.id or info
-
-
-  info.min = info.min or math.min(info.value, 0)
-  info.max = info.max or math.max(info.value, 1)
-  info.step = info.step or (info.max - info.min) / 10
-  local fraction = (info.value - info.min) / (info.max - info.min)
   local value_changed = false
-
-  opt.state = core:registerHitbox(opt,opt.id, x,y,w,h)
-
-  if core:isActive(opt.id) then
-    -- mouse update
-    local mx,my = core:getMousePosition()
-    if opt.vertical then
-      fraction = math.min(1, math.max(0, (y+h - my) / h))
-    else
-      fraction = math.min(1, math.max(0, (mx - x) / w))
+  
+  
+  if opt.vertical then -- 横向滚动
+    if(w<50) then w = 50 end -- 最小
+    h=17 --固定的
+    local fang = 17
+    local midw =  w -fang*2
+    info.vbar_percent = info.vbar_percent or 0.5
+    info.min = info.min or math.min(info.value, 0)
+    info.max = info.max or math.max(info.value, 1)
+    
+    --bar宽度
+    local bar_w = math.floor(info.vbar_percent * midw)
+    local maxBarX = midw - bar_w
+    
+    info.sc_vback_opt = info.sc_vback_opt or {id ={}}
+    info.sc_left_opt = info.sc_left_opt or {id ={}}
+    info.sc_right_opt = info.sc_right_opt or {id ={}}
+    info.sc_vbar_opt = info.sc_vbar_opt or {id ={}}
+    
+    local bar_x
+    -- doDrag
+    local beforeActive = core:isActive(info.sc_vbar_opt.id)
+    if beforeActive then-- doDrag
+      -- mouse update
+      local mx = love.mouse.getX()
+      mx = mx - info.sc_vbar_opt.drag_offset -x -fang
+      if mx <0 then mx =0 elseif mx>maxBarX then mx =maxBarX end
+      bar_x = mx + x +fang
+      --改变的
+      local fraction = mx/maxBarX
+      local v = fraction * (info.max - info.min) + info.min
+      if v ~= info.value then
+        info.value = v
+        value_changed = true
+      end
+    else  --noDrag
+      --根据数据算出bar_x
+      local fraction = (info.value - info.min) / (info.max - info.min)
+      bar_x = math.floor(fraction *maxBarX) +x +fang
     end
-    local v = fraction * (info.max - info.min) + info.min
-    if v ~= info.value then
-      info.value = v
-      value_changed = true
+    
+    
+    local s1=core:Image(vback_img,info.sc_vback_opt,x+fang,y,midw,h)
+    local s2=core:ImageButton(left_quads,info.sc_left_opt,x,y,fang,h)
+    local s3=core:ImageButton(right_quads,info.sc_right_opt,x+fang+midw,y,fang,h)
+    local s4=core:ImageButton(hbar_quads,info.sc_vbar_opt,bar_x,y,bar_w,h)
+    
+    if core:isActive(info.sc_vbar_opt.id) and not beforeActive then
+      -- mouse update
+      local mx = love.mouse.getX()
+      info.sc_vbar_opt.drag_offset = mx -bar_x
     end
-
-
+    
+    local combineS = core:combineState(opt.id,s1,s2,s3,s4)
+    combineS.change = value_changed
+    return combineS
   end
+  
 
-  core:registerDraw(opt.draw or defaultDraw, fraction, opt, x,y,w,h,core.theme)
+
 
   return {
     id = opt.id,
