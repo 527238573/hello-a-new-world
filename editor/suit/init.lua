@@ -39,6 +39,8 @@ return setmetatable({
 	draw = function(...) return instance:draw(...) end,
 
   combineState = function(...) return instance:combineState(...) end,
+  pushScissor = function(...) return instance:pushScissor(...) end,
+  endScissor = function(...) return instance:endScissor(...) end,
 	-- widgets
 	Button = function(...) return instance:Button(...) end,
 	Label = function(...) return instance:Label(...) end,
@@ -51,6 +53,7 @@ return setmetatable({
   Image = function(...) return instance:Image(...) end,
   ImageButton = function(...) return instance:ImageButton(...) end,
   ScrollBar = function(...) return instance:ScrollBar(...) end,
+  ScrollRect = function(...) return instance:ScrollRect(...) end,
 
 	-- layout
 	layout = instance.layout

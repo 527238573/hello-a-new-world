@@ -74,7 +74,7 @@ end
 
 local function h_scroll(core,info,opt,x,y,w,h)
   info.hbar_percent = info.hbar_percent or 0.5
-  if info.hbar_percent >=1 or info.hbar_percent<=0 then 
+  if info.hbar_percent >=1 or info.hbar_percent<=0 or info.h_value ==nil then 
     return h_disabled_scroll(core,info,opt,x,y,w,h) 
   end
   
@@ -83,8 +83,9 @@ local function h_scroll(core,info,opt,x,y,w,h)
   h=17 --固定的
   local fang = 17
   local midw =  w -fang*2
-  local min = info.h_min or math.min(info.h_value, 0)
-  local max = info.h_max or math.max(info.h_value, 1)
+  local min = info.h_min or 0
+  local max = info.h_max or 1
+  
   --bar宽度
   local bar_w = math.floor(info.hbar_percent * midw)
   local maxBarX = midw - bar_w
@@ -113,6 +114,7 @@ local function h_scroll(core,info,opt,x,y,w,h)
     end
   else  --noDrag
     --根据数据算出bar_x
+    info.h_value = math.min(max, math.max(min, info.h_value))--限制范围
     local fraction = (info.h_value - min) / (max - min)
     bar_x = math.floor(fraction *maxBarX) +x +fang
   end
@@ -191,7 +193,7 @@ end
 
 local function v_scroll(core,info,opt,x,y,w,h)
   info.vbar_percent = info.vbar_percent or 0.5
-  if info.vbar_percent >=1 or info.vbar_percent<=0 then 
+  if info.vbar_percent >=1 or info.vbar_percent<=0 or info.v_value==nil then 
     return v_disabled_scroll(core,info,opt,x,y,w,h) 
   end
   
@@ -200,8 +202,8 @@ local function v_scroll(core,info,opt,x,y,w,h)
   w=17 --固定的
   local fang = 17
   local midh =  h -fang*2
-  local min = info.v_min or math.min(info.v_value, 0)
-  local max = info.v_max or math.max(info.v_value, 1)
+  local min = info.v_min or 0
+  local max = info.v_max or 1
 
   --bar宽度
   local bar_h = math.floor(info.vbar_percent * midh)
@@ -231,7 +233,8 @@ local function v_scroll(core,info,opt,x,y,w,h)
       value_changed = true
     end
   else  --noDrag
-    --根据数据算出bar_x
+    --根据数据算出bar_y
+    info.v_value = math.min(max, math.max(min, info.v_value))--限制范围
     local fraction = (info.v_value - min) / (max - min)
     bar_y = math.floor(fraction *maxBarY) +y +fang
   end
