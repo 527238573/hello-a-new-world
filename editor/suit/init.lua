@@ -24,7 +24,9 @@ return setmetatable({
 	registerMouseHit = function(...) return instance:registerMouseHit(...) end,
 	mouseReleasedOn = function(...) return instance:mouseReleasedOn(...) end,
 	updateMouse = function(...) return instance:updateMouse(...) end,
+  updateMouseWheel= function(...) return instance:updateMouseWheel(...) end,
 	getMousePosition = function(...) return instance:getMousePosition(...) end,
+  getWheelNumber = function(...) return instance:getWheelNumber(...) end,
 
 	getPressedKey = function(...) return instance:getPressedKey(...) end,
 	keypressed = function(...) return instance:keypressed(...) end,

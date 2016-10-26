@@ -13,6 +13,7 @@ function suit.new(theme)
       theme = theme or default_theme,
       mouse_x = 0, mouse_y = 0,
       mouse_button_down = false,
+      mouse_wheel_dx = 0, mouse_wheel_dy = 0,
 
       draw_queue = {n = 0},
 
@@ -135,6 +136,14 @@ function suit:getMousePosition()
   return self.mouse_x, self.mouse_y
 end
 
+function suit:updateMouseWheel(dx,dy)
+  self.mouse_wheel_dx = self.mouse_wheel_dx+dx
+  self.mouse_wheel_dy = self.mouse_wheel_dy+dy
+end
+
+function suit:getWheelNumber()
+  return self.mouse_wheel_dy
+end
 -- keyboard handling
 function suit:getPressedKey()
   return self.key_down, self.textchar
@@ -183,6 +192,9 @@ function suit:enterFrame()
   self.hovered_last, self.hovered = self.hovered, nil
   self.hoverOpt = nil
   self:updateMouse(love.mouse.getX(), love.mouse.getY(), love.mouse.isDown(1))
+  --if(self.mouse_wheel_dy>1)then print("moti",self.mouse_wheel_dy)end
+  self.mouse_wheel_dx= 0
+  self.mouse_wheel_dy = 0
   self.key_down, self.textchar = nil, ""
   self:grabKeyboardFocus(NONE)
   self.hit = nil
@@ -258,6 +270,7 @@ function suit:endScissor()
       end)
   end
 end
+
 
 
 return suit

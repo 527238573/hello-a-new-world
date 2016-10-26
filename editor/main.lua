@@ -68,6 +68,11 @@ function love.draw()
    -- love.graphics.circle("fill", mpos.x, mpos.y, 5, 6)
 end
 
+
+function love.wheelmoved(dx,dy)
+  suit.updateMouseWheel(dx,dy)
+end
+
 function love.textinput(t)
     -- forward text input to SUIT
     suit.textinput(t)
