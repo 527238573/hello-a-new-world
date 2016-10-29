@@ -29,6 +29,7 @@ function suit.new(theme)
       ImageButton = require(BASE.."imagebutton"),
       ScrollBar = require(BASE.."scrollBar"),
       ScrollRect = require(BASE.."scrollRect"),
+      List = require(BASE.."list"),
 
       layout = require(BASE.."layout").new(),
       }, suit)
@@ -238,6 +239,14 @@ function suit:combineState(parentid,...)
   return state
 end
 
+function suit:mergeState(origin,newstate)
+  origin.hit = origin.hit or newstate.hit 
+  origin.active = origin.active or newstate.active 
+  origin.hovered = origin.hovered or newstate.hovered 
+  origin.wasHovered = origin.wasHovered or newstate.wasHovered 
+end
+
+
 local function calculateNewScissor(old,x,y,w,h)
   local nx = math.max(old.x,x)
   local ny = math.max(old.y,y)
@@ -271,6 +280,13 @@ function suit:endScissor()
   end
 end
 
+--after state obtained, wheel triggerd next frame
+function suit:wheelRoll(state,info)
+  if state.hovered and self.mouse_wheel_dy~=0 then
+    info.v_value = math.min(info.v_max, math.max(info.v_min, info.v_value -self.mouse_wheel_dy*20))
+    self.mouse_wheel_dy = 0
+  end
+end
 
 
 return suit

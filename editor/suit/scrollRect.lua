@@ -31,10 +31,7 @@ return function(core, info, ...)
     info.vscroll_opt = info.vscroll_opt or {id={},vertical = true}
     vstate = core:ScrollBar(info,info.vscroll_opt, x+w,y,17,vsc_h)
     info.y = math.floor(y-info.v_value)
-    if vstate.hovered and core.mouse_wheel_dy~=0 then
-      info.v_value = math.min(info.v_max, math.max(info.v_min, info.v_value -core.mouse_wheel_dy*4))
-      core.mouse_wheel_dy = 0
-    end
+    core:wheelRoll(vstate,info)
   end
   
   core:pushScissor(x,y,w,h)

@@ -56,6 +56,7 @@ return setmetatable({
   ImageButton = function(...) return instance:ImageButton(...) end,
   ScrollBar = function(...) return instance:ScrollBar(...) end,
   ScrollRect = function(...) return instance:ScrollRect(...) end,
+  List = function(...) return instance:List(...) end,
 
 	-- layout
 	layout = instance.layout

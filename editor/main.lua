@@ -10,6 +10,7 @@ local subwin = {x=400,y=130}
 local myScroll = {h_value =0,v_value =0,hbar_percent=0.45,vbar_percent=0.45,hopt ={id={},vertical = false},vopt ={id={},vertical = true}}
 local myRect = {w =300,h=300, opt ={id={},vertical = true,horizontal = true}}
 local mpos = {x=0,y=0}
+local mylist = {w= 200,h = 400,itemYNum= 4,opt ={id={}}} -- 必须有id
 
 -- all the UI is defined in love.update or functions that are called from here
 function love.update(dt)
@@ -46,18 +47,22 @@ function love.update(dt)
     
     
     suit.DragArea(subwin,true)
-    suit.Dialog("dig1",subwin.x,subwin.y, 300,300)
-    suit.DragArea(subwin,false,subwin.x,subwin.y,300,30)
+    suit.Dialog("dig1",subwin.x,subwin.y, 600,600)
+    suit.DragArea(subwin,false,subwin.x,subwin.y,600,30)
     --suit.Button("Close2", 200,150,200,70)
     --suit.S9Button("Close2", subwin.x+10,subwin.y+50,80,30)
     
    -- suit.ScrollBar(myScroll,myScroll.hopt, subwin.x+10,subwin.y+270,200,17)
    -- suit.ScrollBar(myScroll,myScroll.vopt, subwin.x+210,subwin.y+70,17,200)
-   suit.ScrollRect(myRect,myRect.opt,subwin.x+10,subwin.y+70,200,200)
+--   suit.ScrollRect(myRect,myRect.opt,subwin.x+10,subwin.y+70,200,200)
    
-    suit.S9Button("Close2", myRect.x+10,myRect.y+10,80,30)
+--    suit.S9Button("Close2", myRect.x+10,myRect.y+10,80,30)
     
-   suit.endScissor()
+--   suit.endScissor()
+    suit.List(mylist,function(num,x,y,w,h)
+        if num>4 then return end
+        return suit.S9Button("Close"..num, x,y,w,h)
+        end,mylist.opt,subwin.x+10,subwin.y+70,200,200)
     
 end
 
