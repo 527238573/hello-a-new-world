@@ -19,8 +19,9 @@ return function(core, text, ...)
 
 	w = w or opt.font:getWidth(text) + 4
 	h = h or opt.font:getHeight() + 4
+  
 
-	opt.state = core:registerHitbox(opt,opt.id, x,y,w,h)
+	if opt.block then opt.state = core:registerHitbox(opt,opt.id, x,y,w,h) end --一般情况下文字无遮挡
 	core:registerDraw(opt.draw or defaultDraw, text, opt, x,y,w,h,core.theme)
 
 	return {

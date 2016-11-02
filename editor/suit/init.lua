@@ -20,6 +20,7 @@ return setmetatable({
 	isHit = function(...) return instance:isHit(...) end,
 
 	mouseInRect = function(...) return instance:mouseInRect(...) end,
+  registerHitFullScreen = function(...) return instance:registerHitFullScreen(...) end,
 	registerHitbox = function(...) return instance:registerHitbox(...) end,
 	registerMouseHit = function(...) return instance:registerMouseHit(...) end,
 	mouseReleasedOn = function(...) return instance:mouseReleasedOn(...) end,
@@ -57,6 +58,7 @@ return setmetatable({
   ScrollBar = function(...) return instance:ScrollBar(...) end,
   ScrollRect = function(...) return instance:ScrollRect(...) end,
   List = function(...) return instance:List(...) end,
+  ComboBox = function(...) return instance:ComboBox(...) end,
 
 	-- layout
 	layout = instance.layout

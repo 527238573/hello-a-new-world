@@ -30,6 +30,7 @@ function suit.new(theme)
       ScrollBar = require(BASE.."scrollBar"),
       ScrollRect = require(BASE.."scrollRect"),
       List = require(BASE.."list"),
+      ComboBox = require(BASE.."combobox"),
 
       layout = require(BASE.."layout").new(),
       }, suit)
@@ -95,6 +96,19 @@ function suit:checkScissor()
   else
     return true
   end
+end
+
+--和registerMouseHit一样，忽略条件变成全屏，
+function suit:registerHitFullScreen(opt,id)
+  if(self.hovered ~= nil and self.hoverOpt ~= nil) then
+    if(self.hoverOpt.state == "hovered") then self.hoverOpt.state = "normal" end
+  end
+  self.hovered = id
+  self.hoverOpt = opt
+  if self.active == nil and self.mouse_button_down and self:wasHovered(id) then
+    self.active = id
+  end
+  return self:getStateName(id)
 end
 
 function suit:registerMouseHit(opt,id, ul_x, ul_y, hit)

@@ -12,6 +12,8 @@ local myRect = {w =300,h=300, opt ={id={},vertical = true,horizontal = true}}
 local mpos = {x=0,y=0}
 local mylist = {w= 200,h = 400,itemYNum= 4,opt ={id={}}} -- 必须有id
 
+local mycombo= {data={"lable1","label2"},opt ={id={}}} -- 必须有id
+
 -- all the UI is defined in love.update or functions that are called from here
 function love.update(dt)
     -- put the layout origin at position (100,100)
@@ -63,7 +65,8 @@ function love.update(dt)
         if num>4 then return end
         return suit.S9Button("Close"..num, x,y,w,h)
         end,mylist.opt,subwin.x+10,subwin.y+70,200,200)
-    
+
+    suit.ComboBox(mycombo,mycombo.opt,subwin.x+10,subwin.y+280,120,23)
 end
 
 function love.draw()
