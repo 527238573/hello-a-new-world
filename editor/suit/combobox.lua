@@ -60,20 +60,20 @@ return function(core,info,...)
   hit = core:mouseReleasedOn(info.mask_opt.id)
   if hit then info.showlist = false end
   local allstates ={
-		id = opt.id,
-		hit = hit,
+    id = opt.id,
+    hit = hit,
     active = core:isActive(info.mask_opt.id),
-		hovered = core:isHovered(info.mask_opt.id) and core:wasHovered(info.mask_opt.id),
+    hovered = core:isHovered(info.mask_opt.id) and core:wasHovered(info.mask_opt.id),
     wasHovered = core:wasHovered(info.mask_opt.id)
-	}
-  
+  }
+
   --创建
   local datalen = #info.data
   local imgh = math.max(datalen * singleH,singleH)
   local imgstate =core:Image(back_s9table,x,y,w,imgh+4)
   core:mergeState(allstates,imgstate)
-  if datalen>1 then 
-    local value_change = false
+  if datalen>0 then 
+    local value_changed = false
     x = x+2
     y = y+2
     info.combolist_opt = info.combolist_opt or {id = {}}
@@ -101,12 +101,15 @@ return function(core,info,...)
           love.graphics.printf(info.data[i], x+2, thisy, w-2, opt.align or "center")
         end
       end,x,y,w-4,core.theme)
-    
+
     if hit_list then 
-      info.select = mouseIndex 
+      if info.select ~=mouseIndex then
+        info.select = mouseIndex
+        value_changed = true
+      end
       info.showlist = false 
     end
-    
+
     local liststate = {
       hit = hit_list,
       active = core:isActive(info.combolist_opt.id),
@@ -114,10 +117,8 @@ return function(core,info,...)
       wasHovered = core:wasHovered(info.combolist_opt.id)
     }
     core:mergeState(allstates,liststate)
-    return allstates
+    allstates.changed = value_changed
   end
   return allstates
-
-
 
 end

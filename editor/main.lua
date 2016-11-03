@@ -1,6 +1,6 @@
 ﻿-- suit up
 local suit = require 'suit'
-
+require "component/eui"
 -- storage for text input
 local input = {text = ""}
 local slider = {value = 1, max = 2}
@@ -12,7 +12,10 @@ local myRect = {w =300,h=300, opt ={id={},vertical = true,horizontal = true}}
 local mpos = {x=0,y=0}
 local mylist = {w= 200,h = 400,itemYNum= 4,opt ={id={}}} -- 必须有id
 
-local mycombo= {data={"lable1","label2"},opt ={id={}}} -- 必须有id
+local mycombo= {data={},opt ={id={}}} -- 必须有id
+
+
+local picbtn_info = {img = love.graphics.newImage("suit/assets/water.png")}
 
 -- all the UI is defined in love.update or functions that are called from here
 function love.update(dt)
@@ -66,7 +69,11 @@ function love.update(dt)
         return suit.S9Button("Close"..num, x,y,w,h)
         end,mylist.opt,subwin.x+10,subwin.y+70,200,200)
 
-    suit.ComboBox(mycombo,mycombo.opt,subwin.x+10,subwin.y+280,120,23)
+    suit.ComboBox(mycombo,mycombo.opt,subwin.x+10,subwin.y+280,120,24)
+    
+    
+    eui.PicButton(picbtn_info,subwin.x+140,subwin.y+280)
+    
 end
 
 function love.draw()
