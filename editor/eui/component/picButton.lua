@@ -18,10 +18,18 @@ local function defaultDraw(info, opt, x,y,w,h,theme)
     love.graphics.setColor(255,255,255)
   end
   theme.drawS9Border(s9t,x,y,w,h)
-  local sx = 32/info.img:getWidth()
-  local sy = 32/info.img:getHeight()
   love.graphics.setColor(255,255,255)
-  love.graphics.draw(info.img,x+3,y+3,0,sx,sy)
+
+  if info.quad then 
+    local f1,f2,imgw,imgh = info.quad:getViewport()
+    local sx = 32/imgw
+    local sy = 32/imgh
+    love.graphics.draw(info.img,info.quad,x+3,y+3,0,sx,sy)
+  else
+    local sx = 32/info.img:getWidth()
+    local sy = 32/info.img:getHeight()
+    love.graphics.draw(info.img,x+3,y+3,0,sx,sy)
+  end
 end
 
 
