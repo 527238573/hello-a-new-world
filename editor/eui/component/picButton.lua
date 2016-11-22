@@ -8,12 +8,14 @@ local quads =
   active = s9util.createS9Table(btn_img,0,46,75,23,3,3,3,3)
 }
 
-local function defaultDraw(info, opt, x,y,w,h,theme)
+local function defaultDraw(info, opt, x,y,w,h,selected,theme)
   local opstate = opt.state or "normal"
   local s9t = quads[opstate] or quads.normal
 
   if opstate == "active" then 
     love.graphics.setColor(255,127,39)
+  elseif selected then 
+    love.graphics.setColor(225,107,29)
   else
     love.graphics.setColor(255,255,255)
   end
@@ -34,12 +36,12 @@ end
 
 
 return function (info,...)
-  local opt, x,y = suit.getOptionsAndSize(...)
+  local opt, x,y,selected= suit.getOptionsAndSize(...)
   opt.id = opt.id or info
   local w,h = 38,38
 
   opt.state = suit.registerHitbox(opt,opt.id, x,y,w,h)
-  suit.registerDraw(defaultDraw, info, opt, x,y,w,h,suit.theme)
+  suit.registerDraw(defaultDraw, info, opt, x,y,w,h, selected,suit.theme)
   return {
     id = opt.id,
     hit = suit.mouseReleasedOn(opt.id),

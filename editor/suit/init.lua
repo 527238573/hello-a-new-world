@@ -44,6 +44,7 @@ return setmetatable({
   combineState = function(...) return instance:combineState(...) end,
   pushScissor = function(...) return instance:pushScissor(...) end,
   endScissor = function(...) return instance:endScissor(...) end,
+  wheelRoll = function(...) return instance:wheelRoll(...) end,
 	-- widgets
 	Button = function(...) return instance:Button(...) end,
 	Label = function(...) return instance:Label(...) end,

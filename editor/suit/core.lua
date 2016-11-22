@@ -264,8 +264,8 @@ end
 local function calculateNewScissor(old,x,y,w,h)
   local nx = math.max(old.x,x)
   local ny = math.max(old.y,y)
-  local nw = math:max(math.min(old.x+old.w,x+w)-nx,0)
-  local nh = math:max(math.min(old.y+old.h,y+h)-ny,0)
+  local nw = math.max(math.min(old.x+old.w,x+w)-nx,0)
+  local nh = math.max(math.min(old.y+old.h,y+h)-ny,0)
   return {x = nx,y=ny,w = nw, h= nh,next = old}
 end
 
