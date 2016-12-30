@@ -2,8 +2,6 @@
 
 local BASE = (...):match('(.-)[^%.]+$')
 
-
-
 local function defaultDraw(text, opt, x,y,w,h,theme)
   local c = theme.getColorForState(opt)
 

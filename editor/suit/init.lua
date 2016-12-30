@@ -34,6 +34,7 @@ return setmetatable({
 	textinput = function(...) return instance:textinput(...) end,
 	grabKeyboardFocus = function(...) return instance:grabKeyboardFocus(...) end,
 	hasKeyboardFocus = function(...) return instance:hasKeyboardFocus(...) end,
+  anyKeyboardFocus = function(...) return instance:anyKeyboardFocus(...) end,
 	keyPressedOn = function(...) return instance:keyPressedOn(...) end,
 
 	enterFrame = function(...) return instance:enterFrame(...) end,

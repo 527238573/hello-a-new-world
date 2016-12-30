@@ -2,9 +2,12 @@ local BASE = (...):match('(.-)[^%.]+$')
 
 
 return function(core, info,doDrag, ...)
+  local opt, x,y,w,h = core.getOptionsAndSize(...)
+  opt.id = opt.id or info
+  
   --提前进行drag的部分
   if doDrag then
-    if core:isActive(info) then
+    if core:isActive(opt.id) then
       -- mouse update
       local mx,my = love.mouse.getX(),love.mouse.getY()
       info.x = mx - info.dragX
@@ -15,8 +18,6 @@ return function(core, info,doDrag, ...)
   -- drag部分结束
 
 
-  local opt, x,y,w,h = core.getOptionsAndSize(...)
-  opt.id = info
   local beforeActive = core:isActive(opt.id)
   opt.state = core:registerHitbox(opt,opt.id, x,y,w,h)
   if core:isActive(opt.id) and not beforeActive then

@@ -12,7 +12,8 @@ function suit.new(theme)
       -- TODO: deep copy/copy on write? better to let user handle => documentation?
       theme = theme or default_theme,
       mouse_x = 0, mouse_y = 0,
-      mouse_button_down = false,
+      mouse_button_down = false,  --左键
+      mouse_right_down = false,  --右键，
       mouse_wheel_dx = 0, mouse_wheel_dy = 0,
 
       draw_queue = {n = 0},
@@ -47,37 +48,21 @@ end
 --id的 局限性，button 和 label使用 text做ID 可能 出现混乱。没有可靠ID的情况下 避免操作相关返回值
 
 -- gui state
-function suit:anyHovered()
-  return self.hovered ~= nil
-end
+function suit:anyHovered() return self.hovered ~= nil end
+function suit:isHovered(id) return id == self.hovered end
+function suit:wasHovered(id) return id == self.hovered_last end
+function suit:anyActive() return self.active ~= nil or self.activeR ~= nil end --有可能为NONE
+function suit:isActive(id) return id == self.active end --左键激活
+function suit:isActiveR(id) return id == self.activeR end --右键激活，两个键只能激活一个
+function suit:anyHit() return self.hit ~= nil end --hit 为左键
+function suit:isHit(id) return id == self.hit end
 
-function suit:isHovered(id)
-  return id == self.hovered
-end
-
-function suit:wasHovered(id)
-  return id == self.hovered_last
-end
-
-function suit:anyActive()
-  return self.active ~= nil
-end
-
-function suit:isActive(id)
-  return id == self.active
-end
-
-function suit:anyHit()
-  return self.hit ~= nil
-end
-
-function suit:isHit(id)
-  return id == self.hit
-end
 
 function suit:getStateName(id)
   if self:isActive(id) then
     return "active"
+  elseif self:isActiveR(id) then
+    return "activeR"          --新增加的状态
   elseif self:isHovered(id) then
     return "hovered"
   end
@@ -105,8 +90,12 @@ function suit:registerHitFullScreen(opt,id)
   end
   self.hovered = id
   self.hoverOpt = opt
-  if self.active == nil and self.mouse_button_down and self:wasHovered(id) then
-    self.active = id
+  if self.active == nil and self.activeR==nil and self:wasHovered(id)then
+    if self.mouse_button_down then 
+      self.active = id
+    elseif self.mouse_right_down then -- 一次只能激活一个键
+      self.activeR = id
+    end
   end
   return self:getStateName(id)
 end
@@ -118,8 +107,13 @@ function suit:registerMouseHit(opt,id, ul_x, ul_y, hit)
     end
     self.hovered = id
     self.hoverOpt = opt
-    if self.active == nil and self.mouse_button_down and self:wasHovered(id) then
-      self.active = id
+    
+    if self.active == nil and self.activeR==nil and self:wasHovered(id)then
+      if self.mouse_button_down then 
+        self.active = id
+      elseif self.mouse_right_down then -- 一次只能激活一个键
+        self.activeR = id
+      end
     end
   end
   return self:getStateName(id)
@@ -134,16 +128,29 @@ end
 function suit:mouseReleasedOn(id)
   if not self.mouse_button_down and self:isActive(id) and self:isHovered(id)and self:wasHovered(id) then
     self.hit = id
-
+    return true
+  end
+  return false
+end
+function suit:mouseRightOn(id)
+  if not self.mouse_right_down and self:isActiveR(id) and self:isHovered(id)and self:wasHovered(id) then
+    --self.hit = id -- 右键没有 hit记录
     return true
   end
   return false
 end
 
-function suit:updateMouse(x, y, button_down)
-  self.mouse_x, self.mouse_y = x,y
+
+
+function suit:updateMouse()
+  self.mouse_x, self.mouse_y = love.mouse.getX(),love.mouse.getY()
+  local button_down = love.mouse.isDown(1)
   if button_down ~= nil then
     self.mouse_button_down = button_down
+  end
+  local right_down = love.mouse.isDown(2)
+  if right_down ~= nil then
+    self.mouse_right_down = right_down
   end
 end
 
@@ -189,7 +196,9 @@ end
 function suit:hasKeyboardFocus(id)
   return self.keyboardFocus == id
 end
-
+function suit:anyKeyboardFocus()
+  return self.keyboardFocus ~= nil and  self.keyboardFocus ~= NONE
+end
 function suit:keyPressedOn(id, key)
   return self:hasKeyboardFocus(id) and self.key_down == key
 end
@@ -203,10 +212,17 @@ function suit:enterFrame()
   elseif self.keyboardFocus ~= self.active then
     self.keyboardFocus =  NONE
   end
+  
+  if not self.mouse_right_down then
+    self.activeR = nil
+  elseif self.activeR == nil then
+    self.activeR = NONE
+  end
+  
 
   self.hovered_last, self.hovered = self.hovered, nil
   self.hoverOpt = nil
-  self:updateMouse(love.mouse.getX(), love.mouse.getY(), love.mouse.isDown(1))
+  self:updateMouse()
   --if(self.mouse_wheel_dy>1)then print("moti",self.mouse_wheel_dy)end
   self.mouse_wheel_dx= 0
   self.mouse_wheel_dy = 0
@@ -296,7 +312,7 @@ end
 
 --after state obtained, wheel triggerd next frame
 function suit:wheelRoll(state,info)
-  if state.hovered and self.mouse_wheel_dy~=0 then
+  if state.hovered and state.wasHovered and self.mouse_wheel_dy~=0 then
     info.v_value = math.min(info.v_max, math.max(info.v_min, info.v_value -self.mouse_wheel_dy*20))
     self.mouse_wheel_dy = 0
   end
