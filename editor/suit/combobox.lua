@@ -19,7 +19,7 @@ local function defaultDraw(info, opt, x,y,w,h,theme)
   if info.showlist then s9t = combo_quads.active else s9t = combo_quads[opt.state] or combo_quads.normal end
   love.graphics.setColor(255,255,255)
   theme.drawScale9Quad(s9t,x,y,w,h)
-  local text = info.data[info.select]
+  local text = opt.titleText or info.data[info.select]
   if text then
     love.graphics.setColor(66,66,66)
     love.graphics.setFont(opt.font)

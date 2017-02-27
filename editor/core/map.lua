@@ -15,25 +15,26 @@ function editor.initMap()
   
 end
 
---取得submap   x,y 1-10取值
+--取得submap   x,y 从0开始
 function submap(x,y,z)
   assert(z<=map.highz and z>= map.lowz,"submap index z out of range")
-  assert(x<=map.subx and x>= 1,"submap index x out of range")
-  assert(y<=map.suby and y>= 1,"submap index y out of range")
+  assert(x<map.subx and x>= 0,"submap index x out of range")
+  assert(y<map.suby and y>= 0,"submap index y out of range")
   local zlayer = map[z]
   return zlayer[x][y]
 end
 
 
 
-function editor.createEmptySubmap(z)
+
+local function createEmptySubmap(z)
   local subm = {}
   local default_ter
-  if z>1 then default_ter = "air" elseif z==1 then default_ter = "dirt" else default_ter = "rock" end
+  if z>1 then default_ter = "t_air" elseif z==1 then default_ter = "t_dirt" else default_ter = "t_rock" end
   
-  for i =1,c.submapSide do
+  for i =0,c.submapSide-1 do
     subm[i] = {}
-    for j =1,c.submapSide do
+    for j =0,c.submapSide-1 do
       subm[i][j] = { ter = default_ter}
     end
   end
@@ -47,6 +48,8 @@ function editor.changeMapSize(lz,hz,w,h)
   map.subx = w
   map.suby = h
   editor.size_str = "长宽:"..w.."×"..h.." layers:"..lz.."f~"..hz.."f"
+  editor.updateMapRect();
+  
   --循环所有submap，创建填充没有的
   
   for z = lz,hz do
@@ -54,15 +57,56 @@ function editor.changeMapSize(lz,hz,w,h)
     if(zlayer ==nil) then
       map[z] = {};
       zlayer =  map[z]
-      for x = 1,w do
-        if zlayer[x] == nil then zlayer[x] = {} end
-        for y= 1,h do 
-          if zlayer[x][y] == nil then
-            zlayer[x][y] = editor.createEmptySubmap(z)
-          end
+    end
+    
+    for x = 0,w-1 do
+      if zlayer[x] == nil then zlayer[x] = {} end
+      for y= 0,h-1 do 
+        if zlayer[x][y] == nil then
+          zlayer[x][y] = createEmptySubmap(z)
         end
       end
     end
   end
+end
+
+
+local function brushTerrain(x,y)
+  if editor.selctTileInfo ==nil then return end
+  if( x>=0 and x<editor.square_x_num and y>=0 and y<editor.square_y_num) then
+    local sx = bit.rshift(x,4)
+    local sy = bit.rshift(y,4)
+    local submap = editor.getSubmapFormVirtualXY(sx,sy,editor.curZ)
+    local square = editor.getSquareFormVirtualXY(x,y,editor.curZ)
+    square.ter = editor.selctTileInfo.name
+    draw.setDirty(submap)
+    
+  end
+end
+local function brushBlock(x,y)
+  if editor.selctBlockInfo ==nil then return end
+  if( x>=0 and x<editor.square_x_num and y>=0 and y<editor.square_y_num) then
+    local sx = bit.rshift(x,4)
+    local sy = bit.rshift(y,4)
+    local submap = editor.getSubmapFormVirtualXY(sx,sy,editor.curZ)
+    local square = editor.getSquareFormVirtualXY(x,y,editor.curZ)
+    square.block = editor.selctBlockInfo.name
+    if square.block=="none" then square.block = nil end--清除
+    --draw.setDirty(submap)--无需dirty，block实时绘制
+  end
+end
+function editor.brushSquare(x,y)
+  if editor.curPainterSelct ==1 then
+    brushTerrain(x,y)
+  elseif editor.curPainterSelct ==2 then
+    brushBlock(x,y)
+  end
+end
+
+function editor.repalceMap(newmap)
+  map = newmap
+  editor.map = map
+  editor.changeMapSize(map.lowz,map.highz,map.subx,map.suby)
+  draw.dirtyAll()
 end
 

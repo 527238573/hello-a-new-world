@@ -24,15 +24,15 @@ return function(x,y)
   local s2=suit.ImageButton(down_quads,down_opt, x+92,y,22,22)
   
   if s1.hit then 
-    editor.curZ = c.clamp(editor.curZ +1,editor.map.lowz,editor.map.highz)
+    editor.changeLayer(editor.curZ +1)
   end
   if s2.hit then 
-    editor.curZ = c.clamp(editor.curZ -1,editor.map.lowz,editor.map.highz)
+    editor.changeLayer(editor.curZ -1)
   end
   local state = suit.combineState(nil,s1,s2,s3)
   if state.hovered and state.wasHovered then
     local dy  = suit.getWheelNumber()
-    editor.curZ = c.clamp(editor.curZ +dy,editor.map.lowz,editor.map.highz)
+    editor.changeLayer(editor.curZ +dy)
   end
   
 end

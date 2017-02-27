@@ -276,6 +276,10 @@ function suit:mergeState(origin,newstate)
   origin.wasHovered = origin.wasHovered or newstate.wasHovered 
 end
 
+function suit:standardState(id)
+  return{id = id,hit = self:mouseReleasedOn(id),active = self:isActive(id),
+    hovered = self:isHovered(id) and self:wasHovered(id),wasHovered = self:wasHovered(id)}
+end
 
 local function calculateNewScissor(old,x,y,w,h)
   local nx = math.max(old.x,x)

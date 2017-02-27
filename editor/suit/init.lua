@@ -16,6 +16,7 @@ return setmetatable({
 	wasHovered = function(...) return instance:wasHovered(...) end,
 	anyActive = function(...) return instance:anyActive(...) end,
 	isActive = function(...) return instance:isActive(...) end,
+  isActiveR = function(...) return instance:isActiveR(...) end,
 	anyHit = function(...) return instance:anyHit(...) end,
 	isHit = function(...) return instance:isHit(...) end,
 
@@ -43,6 +44,8 @@ return setmetatable({
 	draw = function(...) return instance:draw(...) end,
 
   combineState = function(...) return instance:combineState(...) end,
+  mergeState = function(...) return instance:mergeState(...) end,
+  standardState = function(...) return instance:standardState(...) end,
   pushScissor = function(...) return instance:pushScissor(...) end,
   endScissor = function(...) return instance:endScissor(...) end,
   wheelRoll = function(...) return instance:wheelRoll(...) end,
