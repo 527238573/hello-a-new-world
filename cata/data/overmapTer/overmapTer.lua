@@ -51,19 +51,19 @@ end
 
 
 
-add_oter("field",0,0,"single")
+add_oter("field",0,0,"single",{allow_road = true})
 
-add_oter("forest",otersize*1,0*otersize,"border",{border_share = {"forest_thick"}})
-add_oter("forest_thick",otersize,0,"sametile",{sametile = "forest",border_share = {"forest"}}) --
+add_oter("forest",otersize*1,0*otersize,"border",{border_share = {"forest_thick"},allow_road = true})
+add_oter("forest_thick",otersize,0,"sametile",{sametile = "forest",border_share = {"forest"},allow_road = true}) --
 add_oter("unseen",otersize*7,0,"border")--暂无用到
 
 add_oter("open_air",otersize*0,otersize*1,"single")
 add_oter("solid_rocks",otersize*7,otersize*0,"border")
 
-add_oter("river",otersize*13,otersize*0,"border",{background = love.graphics.newQuad(13*otersize,1*otersize,otersize,otersize,imgw,imgh)})
-add_oter("road",otersize*1,otersize*1,"border",{})
+add_oter("river",otersize*13,otersize*0,"border",{background = love.graphics.newQuad(13*otersize,1*otersize,otersize,otersize,imgw,imgh),allow_road = true})
+add_oter("road",otersize*1,otersize*1,"border",{allow_road = true})
 
 --单house
-addOneBuilding("house1x1",otersize*1,otersize*2,otersize*2,otersize*2,{sidewalk = true})--非野外buildingsidewalk都为true
+addOneBuilding("house1x1",otersize*1,otersize*2,otersize*2,otersize*2,{sidewalk = true,})--非野外buildingsidewalk都为true
 
 return overmapter_data

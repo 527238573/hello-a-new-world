@@ -13,6 +13,27 @@ function gmap.getDefaultOvermapOption()
     forest_size_max=66,               -- "//": "note: 32400 tiles in omap, 250*minmax = 3750-10000 default_oters become forests",
     
     river_oter=  data.oter_name2id["river"],
+    road_oter=  data.oter_name2id["road"],
+    house_oter = data.oter_name2id["house1x1"],
+    city = {size = 4,spacing = 4},
+    
+    
+    
+    specials= {
+        {
+          name = "house22",
+          roadstart = {0,-1},
+          locations = {"field"},
+          city_distance = {5,10}, 
+          city_size = {4,12},
+          rotate= false,
+          occurrences ={8, 16},
+        },
+      
+      
+      
+      },
+    
     
   }
 

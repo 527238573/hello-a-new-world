@@ -46,7 +46,7 @@ function rov.drawOter(batch,otx,oty,lx,ly,curz)
     if info.background then batch:add(info.background,(lx+0.5)*32,(-ly-0.5)*32,0,2,2,ox,oy)end
     
     batch:add(info[borderIndex[statecode]],(lx+0.5)*32,(-ly-0.5)*32,borderRad[statecode],2,2,ox,oy)
-  elseif info.tiletype==3 then--building
+  elseif info.tiletype==3 then--single building?
     local rot = 0
     if info.rotate then
       --确定旋转, 0 入口朝下 1,2,3 分别顺时针旋转1，2，3*90度  背面顺序：上右下左
@@ -55,7 +55,34 @@ function rov.drawOter(batch,otx,oty,lx,ly,curz)
     local ox = 0.5*16
     local oy = 0.5*16
     batch:add(info[1],(lx+0.5)*32,(-ly-0.5)*32,rot,2,2,ox,oy)
-    batch:add(info[2],(lx+0.5)*32,(-ly-0.5)*32,0,2,2,ox,oy)--top 
+    if info[2] then  batch:add(info[2],(lx+0.5)*32,(-ly-0.5)*32,0,2,2,ox,oy) end--top 
+    
+  elseif info.tiletype==4 then--overmap building
+    local rot = 0
+    if info.rotate then
+      --确定旋转, 0 入口朝下 1,2,3 分别顺时针旋转1，2，3*90度  背面顺序：上右下左
+      rot = otid-info.base_id
+    end
+    local ox = 0.5*16
+    local oy = 0.5*16
+    
+    batch:add(info[1],(lx+0.5)*32,(-ly-0.5)*32,r09*rot,2,2,ox,oy)
+    
+    local building = info.building
+    local rx = info.rx
+    local ry = info.ry;
+    local rz = info.rz;
+    if rot==1 then
+      rx,ry = ry,building.xlen -rx-1
+      
+    elseif rot==2 then
+      rx = building.xlen -rx-1
+      ry = building.ylen -ry-1
+    elseif rot==3 then
+      rx,ry = building.ylen -ry-1,rx
+    end
+    local top_quad = building.top[rx*building.ylen*building.zlen+ry*building.zlen+rz+1]
+    if top_quad then  batch:add(top_quad,(lx+0.5)*32,(-ly-0.5)*32,0,2,2,ox,oy) end--top 
   else
     return 0
   end

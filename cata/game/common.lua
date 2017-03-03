@@ -51,6 +51,17 @@ end
 rnd = love.math.random
 function one_in(num)  return rnd(num)<=1 end
 
+function c.random_shuffle(t)
+  local length  = #t
+  for i=length,1,-1 do
+    local rnd_index = rnd(i)
+    local tmp = t[rnd_index]
+    t[rnd_index] = t[i]
+    t[i] = tmp
+  end
+end
+
+
 
 --查找在权重table t 中随机值v的index
 local function search_weight(t,v)

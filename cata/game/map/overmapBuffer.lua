@@ -15,10 +15,13 @@ local overmaps = {}--存储数据的网格
 overmapBase.overmaps = overmaps
 
 local unseen_id--用于返回值
-
+local river_id--用于判定
+local road_id
 
 function overmapBase.initOvermapBuffer()
   unseen_id = data.oter_name2id["unseen"]
+  river_id = data.oter_name2id["river"]
+  road_id = data.oter_name2id["road"]
 end
 local last_request_overmap--最近取得的overmap坐标
 local last_ro_x,last_ro_y -- 最近的读取坐标
@@ -74,5 +77,13 @@ function overmapBase.get_or_create_oterid(x,y,z)
 end
 
 
+--判定oter是否是river 
+function overmapBase.isRiver(oter_id)
+  return oter_id == river_id
+end
 
+--判定oter是否是road
+function overmapBase.isRoad(oter_id)
+  return oter_id == road_id
+end
 

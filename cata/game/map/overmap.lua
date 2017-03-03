@@ -34,6 +34,10 @@ local mt = {
     inbounds = function(om,x,y,z)
       return x>=0 and x<256 and y>=0 and y<256 and z>=-10 and z<=12
     end,
+    getOterOrNil = function(om,x,y,z)
+      if x>=0 and x<256 and y>=0 and y<256 and z>=-10 and z<=12 then return om.ter[x][y][z+10] else return nil end
+    end
+    
   },
 }
 overmapBase.create_overmap = ffi.metatype("overmap", mt)

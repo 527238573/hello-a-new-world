@@ -69,6 +69,10 @@ local gendata = {}
 function gmap.generateSubmap(x,y,z)
   --先取得oter基本信息
   local oter_id = overmapBase.get_or_create_oterid(x,y,z)
+  if oter_id>data.lastOter_nb_id then--类型为building
+    return gmap.generateBuilding(oter_id,x,y,z)
+  end
+  
   --周边信息
   gendata[1] =  overmapBase.get_or_create_oterid(x,y+1,z)
   gendata[2] =  overmapBase.get_or_create_oterid(x+1,y,z)
@@ -80,6 +84,7 @@ function gmap.generateSubmap(x,y,z)
   gendata[8] =  overmapBase.get_or_create_oterid(x-1,y-1,z)
   -- generator function
   local gfunc =  mapgen_functions[oter_id]
+  
   if type(gfunc) == "table" then
     local weight_t = mapgen_weights[oter_id]
     local rnd = love.math.random(weight_t[#weight_t])
@@ -103,7 +108,12 @@ function gmap.generateSubmap(x,y,z)
   return subm
 end
 
-
-
+--生成building
+function gmap.generateBuilding(oter_id,x,y,z)
+  local subm = gmap.create_submap()
+  subm:fillTer(gmap.cur_submapGenSetting.openair)
+  gmap.addSubmap(x,y,z,subm)
+  return subm
+end
 
 

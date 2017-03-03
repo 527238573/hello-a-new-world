@@ -1,6 +1,8 @@
 --roguelike game model
 g = {}--主table
 data={}--读取的数据table
+
+require"game/base/base"
 require"game/map/omdata"--overmap terrain数据
 require"game/map/mapdata"
 require"game/unit/animData"

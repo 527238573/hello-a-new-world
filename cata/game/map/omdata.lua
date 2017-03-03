@@ -9,6 +9,10 @@ data.oter = oter_list
 data.oter_name2info = oter_name2info
 data.oter_name2id = oter_name2id
 
+--building 结构
+--data.building
+data.building_name2info = {}
+data.building_name2id = {}
 --[[oter数据结构
 一种oter可能会占用多个 oter_id来表示不同的状态
 rotate=true 占用4个oterid表示不同方向
@@ -17,32 +21,59 @@ rotate=true 占用4个oterid表示不同方向
 --]]
 
 
-function data.loadOterTable(ot)
-  
-  for _,v in ipairs(ot) do
+local function insertOneOter(v)
+  table.insert(oter_list,v)
+  oter_name2info[v.name] = v
+  oter_name2id[v.name] = #oter_list
+  v.base_id = #oter_list
+  v.ex_id = 0
+  --插入多余的oterid，旋转等
+  if v.rotate then
+    v.ex_id = 3
+    table.insert(oter_list,v) --多余的，0，1，2，3
     table.insert(oter_list,v)
-    oter_name2info[v.name] = v
-    oter_name2id[v.name] = #oter_list
-    v.base_id = #oter_list
-    v.ex_id = 0
-    --插入多余的oterid，旋转等
-    if v.rotate then
-      v.ex_id = 3
-      table.insert(oter_list,v) --多余的，0，1，2，3
-      table.insert(oter_list,v)
-      table.insert(oter_list,v)
+    table.insert(oter_list,v)
       
-    end
-    
-    
   end
 end
 
+
+
+
+function data.loadOterTable(ot)
+  for _,v in ipairs(ot) do
+    insertOneOter(v)
+  end
+end
+
+
+
+function data.loadOterBuilding()
+  for i =1,#data.building do
+    local building = data.building[i]
+    data.building_name2info[building.name] = building
+    data.building_name2id[building.name] = i
+    
+    
+    building.base_id = i
+    for j =1,#building do
+      insertOneOter(building[j])
+    end
+  end
+  
+end
+
+
 function data.loadOterData()
   if loaded then return else loaded = true end
-  local tmp = dofile("data/overmapTer.lua")
+  local tmp = dofile("data/overmapTer/overmapTer.lua")
   data.loadOterTable(tmp)
   data.Oter_BigImage = tmp.img
+  
+  data.lastOter_nb_id = #(data.oter)--分界线
+  --开始读取overmapBuidling
+  data.building = dofile("data/overmapTer/overmapBuilding.lua")
+  data.loadOterBuilding()
   
   
   --将一些字符name 连接为 数字id
