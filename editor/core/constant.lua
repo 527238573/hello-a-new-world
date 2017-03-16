@@ -20,3 +20,8 @@ end
 
 c.btn_font = love.graphics.newFont("assets/fzh.ttf",14);
 c.cn12_font = love.graphics.newFont("assets/fzh.ttf",12);
+
+
+function tl(cn,en)
+  return cn
+end

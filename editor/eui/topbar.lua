@@ -22,7 +22,7 @@ local dircection_str= {"朝向:↑","朝向:→","朝向:↓","朝向:←"}
 local test_opt = {id={}}
 
 local showMesh = {text = "showGrid",checked = false}
-
+local showSetting_btn = {id={},font = c.btn_font}
 local changesize_dlg = require"eui/changeSizeDlg"
 local floor_setter = require"eui/component/floorSetter"
 local mapfile = require"file/mapfile"
@@ -36,7 +36,9 @@ return function()
   local s_save  = eui.PicButton(save_opt,save_opt,94,0,false)
   local s_saveas  = eui.PicButton(saveas_opt,saveas_opt,139,0,false)
   
-  local showgrid_state = suit.Checkbox(showMesh, 410,2,90,26)
+  --local showgrid_state = suit.Checkbox(showMesh, 410,2,90,26)
+  
+  local showSetting_state = suit.S9Button("show menu",showSetting_btn,410,2,90,26)
   
   local s_sizebtn = suit.S9Button(editor.size_str,changeSize_btn_opt,500,2,170,26)
   
@@ -55,7 +57,9 @@ return function()
   if(s_open.hit) then eui.popwindow = eui.openFileDialog end
   if(s_save.hit) then mapfile.saveOld() end
   if(s_saveas.hit) then eui.popwindow = eui.saveFileDialog end
-  if(showgrid_state.change) then editor.showGrid = showMesh.checked end
+  --if(showgrid_state.change) then editor.showGrid = showMesh.checked end
+  if(showSetting_state.hit) then eui.popwindow = eui.showSetting end
+  
   if(s_sizebtn.hit) then eui.popwindow = changesize_dlg end
   if d3.hit then editor.changeDirection(1) end
   if d1.hit then editor.changeDirection(editor.curDirection -1) end

@@ -7,9 +7,13 @@ local s9util = require(BASE.."s9util")
 local btn_img = love.graphics.newImage(BASE.."/assets/button.png")
 local quads = 
 {
-  normal = s9util.createS9Table(btn_img,0,0,75,23,2,2,2,2),
-  hovered= s9util.createS9Table(btn_img,0,23,75,23,2,2,2,2),
-  active = s9util.createS9Table(btn_img,0,46,75,23,2,2,2,2)
+  --normal = s9util.createS9Table(btn_img,0,0,75,23,2,2,2,2),
+  --hovered= s9util.createS9Table(btn_img,0,23,75,23,2,2,2,2),
+  --active = s9util.createS9Table(btn_img,0,46,75,23,2,2,2,2)
+  
+  normal = s9util.createS9Table(btn_img,0,0,28,32,6,10,6,6),
+  hovered= s9util.createS9Table(btn_img,0,32,28,32,6,10,6,6),
+  active = s9util.createS9Table(btn_img,0,64,28,32,6,10,6,6)
 }
 
 
@@ -22,7 +26,7 @@ local function defaultDraw(text, opt, x,y,w,h,theme)
 	love.graphics.setColor(66,66,66)
 	love.graphics.setFont(opt.font)
 
-	y = y + theme.getVerticalOffsetForAlign(opt.valign, opt.font, h)
+	y = y + theme.getVerticalOffsetForAlign(opt.valign, opt.font, h-5)
 	love.graphics.printf(text, x+2, y, w-4, opt.align or "center")
 end
 

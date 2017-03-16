@@ -282,19 +282,18 @@ return {
 					},
 					[10] = {
 						ter = "t_dirt",
-						block = "tree",
 					},
 					[9] = {
 						ter = "t_dirt",
 					},
 					[8] = {
-						ter = "t_sgrass",
+						ter = "t_dirt",
 					},
 					[3] = {
 						ter = "t_dirt",
 					},
 					[7] = {
-						ter = "t_sgrass",
+						ter = "t_dirt",
 					},
 					[15] = {
 						ter = "t_dirt",
@@ -335,10 +334,10 @@ return {
 						ter = "t_dirt",
 					},
 					[9] = {
-						ter = "t_wall_rock",
+						ter = "t_dirt",
 					},
 					[8] = {
-						ter = "t_wall_rock",
+						ter = "t_dirt",
 					},
 					[3] = {
 						ter = "t_dirt",
@@ -385,10 +384,10 @@ return {
 						ter = "t_dirt",
 					},
 					[9] = {
-						ter = "t_wall_rock",
+						ter = "t_dirt",
 					},
 					[8] = {
-						ter = "t_wall_rock",
+						ter = "t_dirt",
 					},
 					[3] = {
 						ter = "t_dirt",
@@ -435,7 +434,7 @@ return {
 						ter = "t_dirt",
 					},
 					[9] = {
-						ter = "t_grass",
+						ter = "t_dirt",
 					},
 					[8] = {
 						ter = "t_dirt",
@@ -444,7 +443,7 @@ return {
 						ter = "t_dirt",
 					},
 					[7] = {
-						ter = "t_sgrass",
+						ter = "t_dirt",
 					},
 					[15] = {
 						ter = "t_dirt",
@@ -527,13 +526,12 @@ return {
 					},
 					[11] = {
 						ter = "t_dirt",
-						block = "tree",
 					},
 					[4] = {
 						ter = "t_dirt",
 					},
 					[10] = {
-						ter = "t_sgrass",
+						ter = "t_dirt",
 					},
 					[9] = {
 						ter = "t_dirt",
@@ -578,7 +576,6 @@ return {
 					},
 					[11] = {
 						ter = "t_dirt",
-						block = "tree",
 					},
 					[4] = {
 						ter = "t_dirt",
@@ -587,7 +584,7 @@ return {
 						ter = "t_dirt",
 					},
 					[9] = {
-						ter = "t_sgrass",
+						ter = "t_dirt",
 					},
 					[8] = {
 						ter = "t_dirt",
@@ -597,7 +594,6 @@ return {
 					},
 					[7] = {
 						ter = "t_dirt",
-						block = "tree_young",
 					},
 					[15] = {
 						ter = "t_dirt",
@@ -686,27 +682,24 @@ return {
 					},
 					[10] = {
 						ter = "t_dirt",
-						block = "tree",
 					},
 					[9] = {
 						ter = "t_dirt",
 					},
 					[8] = {
-						ter = "t_sgrass",
+						ter = "t_dirt",
 					},
 					[3] = {
 						ter = "t_dirt",
 					},
 					[7] = {
 						ter = "t_dirt",
-						block = "tree_young",
 					},
 					[15] = {
 						ter = "t_dirt",
 					},
 					[6] = {
 						ter = "t_dirt",
-						block = "tree_young",
 					},
 				},
 				[15] = {
@@ -789,13 +782,12 @@ return {
 					},
 					[10] = {
 						ter = "t_dirt",
-						block = "tree",
 					},
 					[9] = {
 						ter = "t_dirt",
 					},
 					[8] = {
-						ter = "t_sgrass",
+						ter = "t_dirt",
 					},
 					[3] = {
 						ter = "t_dirt",
@@ -1619,6 +1611,8 @@ return {
 			},
 		},
 	},
+	weight = 12,
+	building_name = "12",
 	highz = 2,
 	suby = 1,
 	subx = 1,

@@ -21,7 +21,7 @@ function gmap.getDefaultOvermapOption()
     
     specials= {
         {
-          name = "house22",
+          name = "shelter",
           roadstart = {0,-1},
           locations = {"field"},
           city_distance = {5,10}, 

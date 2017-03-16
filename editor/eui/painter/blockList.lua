@@ -37,8 +37,8 @@ return function (x,y,w,h)
     suit.Label(k,label_opt,x,y,120,22)
     y=y+22
     for i=1,#v do
-      local xoff = i%7*38-38
-      local yoff = math.floor(i/7)*38
+      local xoff = (i-1)%7*38
+      local yoff = math.floor((i-1)/7)*38
       local index = v[i]
       local memberState = eui.PicButton(block_data[index],x+xoff,y+yoff,block_select ==index)
       if memberState.hit then 

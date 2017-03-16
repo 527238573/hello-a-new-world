@@ -9,13 +9,25 @@ for i=1,#tile_data do
   name_info[info.name] = info
 end
 
+function draw.isWall(ter)
+  local edge_ter_info = name_info[ter]
+  return edge_ter_info.type ==4
+end
+
+
+
+
 local function getSquare(x,y,z)
-  if x>=0 and x< editor.real_x_square and y>=0 and y<editor.real_y_square then
+  if x>=0 and x< editor.square_x_num and y>=0 and y<editor.square_y_num then
     return editor.getSquareFormVirtualXY(x,y,z)
   else
     return nil
   end
 end
+
+
+
+
 
 local r0 = math.rad(0)
 local r9 = math.rad(90)

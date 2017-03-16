@@ -167,8 +167,24 @@ function gmap.getblockDataInGrid(x,y,z)
   return sm.raw:getBlock(bit.band(x,15),bit.band(y,15)),gmap.getUnitInGrid(x,y,z)
 end
 
+function gmap.getBlockInGrid(x,y,z)
+  local sx= bit.arshift(x,4)
+  local sy= bit.arshift(y,4)--取得submap坐标
+  local sm = gmap.getSubmapInGrid(sx,sy,z)
+  if sm==nil then return nil end
+  return sm.raw:getBlock(bit.band(x,15),bit.band(y,15))
+end
 
 
+function gmap.isWallTerInGrid(x,y,z)
+  local sx= bit.arshift(x,4)
+  local sy= bit.arshift(y,4)--取得submap坐标
+  local sm = gmap.getSubmapInGrid(sx,sy,z)
+  if sm==nil then return false end
+  local info = data.ster[sm.raw:getTer(bit.band(x,15),bit.band(y,15))]
+  return info.type==4
+  
+end
 
 
 

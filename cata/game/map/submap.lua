@@ -79,12 +79,13 @@ end
 
 --必须是，1，2，3   （*90度， 顺时针）
 function submap_metaTable:rotate(turns)
+  debugmsg("rotate:"..turns)
   turns = turns %4
   if turns==0 then return end
   local function old_xy(nx,ny)
-    if turns ==1 then return 15-nx,ny 
-    elseif turns ==2 then return 15-ny,15-nx
-    else return nx,15-ny end
+    if turns ==1 then return 15-ny,nx
+    elseif turns ==2 then return 15-nx,15-ny
+    else return  ny,15-nx end
   end
   local new_raw = create_raw_submap()
   local oldraw = self.raw

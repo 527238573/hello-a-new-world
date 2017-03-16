@@ -8,6 +8,9 @@ local ylen_info ={value =1, min = 1,max=6,opt = {id={}}}
 local z_height_info ={value =1, min = 1,max=12,opt = {id={}}}
 local z_depth_info ={value =1, min = -10,max=1,opt = {id={}}}
 
+local textinput_info = {text = "",opt = {id={}}}
+local weight_input_info = {text = "100",opt = {id={}}}
+
 local confirm_opt = {id={}}
 local cancel_opt = {id={}}
 local label_opt = {color={33,33,33}}
@@ -21,9 +24,15 @@ return function()
     local map = editor.map
     xlen_info.value = map.subx; ylen_info.value = map.suby;
     z_height_info.value = map.highz; z_depth_info.value = map.lowz;
+    textinput_info.text = map.building_name or ""
+    weight_input_info.text = tostring(map.weight)
+    
+    print("map.building_name:",map.building_name)
+    io.flush()
+    
   end
   suit.DragArea(dlg,true,dlg.dragopt)
-  suit.Dialog("调整地图尺寸",dlg,dlg.x,dlg.y, 400,220)
+  suit.Dialog("调整地图尺寸",dlg,dlg.x,dlg.y, 400,270)
   suit.DragArea(dlg,false,dlg.dragopt,dlg.x,dlg.y,400,30)
   
   local s_close = eui.closeBtn(closeBtn_Opt,dlg.x+369,dlg.y+3)
@@ -38,8 +47,15 @@ return function()
   suit.Label("Z_depth:",label_opt,dlg.x+210,dlg.y+110,70,22)
   eui.numberStepper(z_depth_info,z_depth_info.opt,dlg.x+280,dlg.y+110)
   
-  local s_confirm = suit.S9Button("Confirm",confirm_opt,dlg.x+70,dlg.y+170,80,26)
-  local s_cancel = suit.S9Button("Cancel",cancel_opt,dlg.x+250,dlg.y+170,80,26)
+  suit.Label("Building Name id:",label_opt,dlg.x+30,dlg.y+150,130,22)
+  suit.Input(textinput_info, textinput_info.opt,dlg.x+160,dlg.y+150,185,22)
+  
+  suit.Label("weight:",label_opt,dlg.x+30,dlg.y+180,130,22)
+  suit.Input(weight_input_info, weight_input_info.opt,dlg.x+160,dlg.y+180,185,22)
+  
+  
+  local s_confirm = suit.S9Button("Confirm",confirm_opt,dlg.x+70,dlg.y+220,80,26)
+  local s_cancel = suit.S9Button("Cancel",cancel_opt,dlg.x+250,dlg.y+220,80,26)
   
   if(s_cancel.hit or s_close.hit) then
     read_value = false
@@ -48,6 +64,6 @@ return function()
   if s_confirm.hit then
     read_value = false
     eui.popwindow = nil
-    editor.changeMapSize(z_depth_info.value,z_height_info.value,xlen_info.value,ylen_info.value)
+    editor.changeMapSize(z_depth_info.value,z_height_info.value,xlen_info.value,ylen_info.value,textinput_info.text,tonumber(weight_input_info.text))
   end
 end

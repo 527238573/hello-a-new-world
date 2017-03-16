@@ -25,7 +25,21 @@ function gmap.loadSubmapGen()
   for _, v in ipairs(fs.files) do --
     local tmp = dofile("data/mapgen_builtin/"..v) -- 执行文件夹内所有文件，载入所有mapgenfunction
   end
-  
+  --读取building生成数据
+  fs:cd(love.filesystem.getSource().."/data/mapgen_editor")
+  for _, v in ipairs(fs.files) do --
+    local tmp = dofile("data/mapgen_editor/"..v) -- 执行文件夹内所有文件，载入所有mapgenfunction
+    --
+    local building = data.building_name2info[tmp.building_name]--找到对应的
+    if(building ==nil) then error("cant find building : "..tmp.building_name) end
+    local check = building.xlen == tmp.subx and building.ylen == tmp.suby and building.zmin == tmp.lowz and building.zmax == tmp.highz
+    if not check then error("building size not equal ") end
+    if tmp.weight<=0 then error("weight must >0") end
+    building.mapgen  = c.pushWeightVal(building.mapgen,tmp,tmp.weight)
+      
+    
+    
+  end
 end
 
 --将func添加到mapgen_functions,考虑权重
@@ -108,12 +122,68 @@ function gmap.generateSubmap(x,y,z)
   return subm
 end
 
+require "game/map/buildingGen/buildingGen"
 --生成building
 function gmap.generateBuilding(oter_id,x,y,z)
-  local subm = gmap.create_submap()
-  subm:fillTer(gmap.cur_submapGenSetting.openair)
-  gmap.addSubmap(x,y,z,subm)
+  
+  local oter_info =data.oter[oter_id] 
+  local building = oter_info.building
+  if building.mapgen ==nil then 
+    local subm = gmap.create_submap()
+    subm:fillTer(gmap.cur_submapGenSetting.openair)
+    gmap.addSubmap(x,y,z,subm)
+    debugmsg("building magen missing:"..building.name)
+    return subm
+  end
+  local mapdata = c.getWeightValue(building.mapgen)
+  local rotation = oter_id - oter_info.base_id
+  
+  
+  local function indexsubmap(x,y,z)
+    return (z)*mapdata.subx*mapdata.suby +y*mapdata.subx +x +1
+  end
+  --已初始点0，0旋转相对xy到实际dir变换后的xy
+  local function dirXY(dir,x,y)
+    if dir==1 then 
+      return y,-x
+    elseif dir ==2 then 
+      return -x,-y
+    elseif dir ==3 then 
+      return -y,x
+    else
+      return x,y
+    end
+  end
+  
+  
+  local submaps = gmap.genBuidlingFromData(mapdata)
+  local subm = submaps[indexsubmap(oter_info.rx,oter_info.ry,oter_info.rz)]
+  
+  local dx,dy = dirXY(rotation,oter_info.rx,oter_info.ry)
+  local dz = oter_info.rz
+  local ox,oy,oz = x-dx,y-dy,z-dz--原点的位置(位于最下层)
+  for x= 0,building.xlen-1 do
+    for y = 0,building.ylen-1 do
+      for z = 0,building.zlen-1 do
+        local subm = submaps[indexsubmap(x,y,z)]
+        subm:rotate(rotation)
+        local ax,ay = dirXY(rotation,x,y)
+        ax =ax+ox
+        ay =ay+oy
+        local az = oz +z
+        if z>=-10 and z<=12 then gmap.addSubmap(ax,ay,az,subm) end --添加
+        
+        
+      end
+    end
+  end
+  
+  
+  
   return subm
 end
+
+
+
 
 

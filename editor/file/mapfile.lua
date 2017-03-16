@@ -8,7 +8,7 @@ function mapfile.newFile()
   curFileName = nil
   curFilePath = nil
   love.window.setTitle("MapEditor")
-  editor.repalceMap({lowz = 1,highz = 2,subx = 1,suby = 1})
+  editor.repalceMap({lowz = 1,highz = 2,subx = 1,suby = 1,building_name = "",weight = 100})
   editor.changeLayer(1)
   editor.changeDirection(1)
 end
@@ -47,6 +47,7 @@ function mapfile.saveFile(name,path)
 end
 
 function mapfile.internalSave(name,fullpath)
+  editor.cutUnuseSubmap()--除去没用的
   local result,err  = table.save(  editor.map,curFilePath )
   print("save",result,err)
   io.flush()

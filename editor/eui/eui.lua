@@ -10,6 +10,7 @@ eui.fileButton = require "eui/component/fileButton"
 eui.topbar = require "eui/topbar"
 eui.painterPanel = require "eui/painterPanel"
 eui.touch = require "eui/touch"
+require "eui/showSetting"
 require "eui/fileDialog"
 -- suit up
 local suit = require 'suit'

@@ -4,12 +4,33 @@ require "draw/drawSquares"
 require "draw/drawSubmap"
 require "draw/drawBlock"
 draw.createNewBatchDic()--初始化
-
+draw.shiftX = 0
+draw.shiftY = 0
 
 function draw.drawMap()
   --draw.drawAllSquares()
-  draw.drawAllSubmaps()
-  draw.drawAllBlocks()
+  local curZ = editor.curZ
+  
+  if editor.showDownLayer then
+    if curZ-1>=editor.map.lowz then
+      
+      love.graphics.push()
+      love.graphics.translate(0,20)
+      draw.shiftX = 0
+      draw.shiftY = 20
+      
+      draw.drawAllSubmaps(curZ-1)
+      draw.drawAllBlocks(curZ-1)
+      love.graphics.pop()
+      draw.shiftX = 0
+      draw.shiftY = 0
+      
+    end
+  end
+  
+  
+  draw.drawAllSubmaps(curZ)
+  draw.drawAllBlocks(curZ)
   if (editor.showGrid) then grid.drawMapDebugMesh() end
   
   

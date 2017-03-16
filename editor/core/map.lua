@@ -11,7 +11,10 @@ function editor.initMap()
   map.highz = 2 --floor2
   map.subx = 1
   map.suby = 1
-  editor.changeMapSize(1,2,1,1)
+  map.building_name = ""
+  map.weight = 100
+  
+  editor.changeMapSize(1,2,1,1,"",100)
   
 end
 
@@ -41,17 +44,18 @@ local function createEmptySubmap(z)
   return subm
 end
 
-function editor.changeMapSize(lz,hz,w,h)
+function editor.changeMapSize(lz,hz,w,h,bname,weight)
   assert(hz>=lz,"submap lowz must less than highz")
   map.lowz = lz
   map.highz = hz 
   map.subx = w
   map.suby = h
+  map.building_name = bname
+  map.weight = weight
   editor.size_str = "长宽:"..w.."×"..h.." layers:"..lz.."f~"..hz.."f"
   editor.updateMapRect();
   
   --循环所有submap，创建填充没有的
-  
   for z = lz,hz do
     local zlayer = map[z]
     if(zlayer ==nil) then
@@ -69,8 +73,28 @@ function editor.changeMapSize(lz,hz,w,h)
     end
   end
 end
-
-
+--删除map中没用到的submap，这样存档时不保存没用的信息
+function editor.cutUnuseSubmap()
+  for z = -10,12 do
+    if z<map.lowz or z>map.highz then
+      map[z] = nil
+    else
+      local zlayer = map[z]
+      for x= 0,10 do
+        if x>=map.subx then
+          zlayer[x] = nil
+        else
+          local xlayer = zlayer[x]
+          for y = 0,10 do
+            if y>=map.suby then
+              xlayer[y]=nil
+            end
+          end
+        end
+      end
+    end
+  end
+end
 local function brushTerrain(x,y)
   if editor.selctTileInfo ==nil then return end
   if( x>=0 and x<editor.square_x_num and y>=0 and y<editor.square_y_num) then
@@ -106,7 +130,7 @@ end
 function editor.repalceMap(newmap)
   map = newmap
   editor.map = map
-  editor.changeMapSize(map.lowz,map.highz,map.subx,map.suby)
+  editor.changeMapSize(map.lowz,map.highz,map.subx,map.suby,map.building_name,map.weight)
   draw.dirtyAll()
 end
 

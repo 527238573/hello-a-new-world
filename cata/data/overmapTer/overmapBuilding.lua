@@ -55,16 +55,24 @@ local function setBuildingLayerQuad(building,zlayer,startx,starty,endx,endy)--�
   
   assert((endx-startx+1)==xlen,"layerX != xlen")
   assert((endy-starty+1)==ylen,"layerY != ylen")
-  assert(zlayer>=building.zmin and zlayer<=building.zmax,"zlayer out range")
+  --assert(zlayer>=building.zmin and zlayer<=building.zmax,"zlayer out range")
   
   starty,endy = endy,starty
   
-  local z = zlayer-building.zmin
   for x = 0,xlen-1 do
     for y= 0,ylen-1 do
-      local index = x*ylen*zlen+y*zlen+z+1
-      local building_oter = building[index]
-      building_oter[1] = love.graphics.newQuad((startx+x)*otersize,(starty-y)*otersize,otersize,otersize,imgw,imgh)
+      local quad = love.graphics.newQuad((startx+x)*otersize,(starty-y)*otersize,otersize,otersize,imgw,imgh)
+      if zlayer=="all" then
+        for z = building.zmin,building.zmax do
+          local index = x*ylen*zlen+y*zlen+z+1
+          building[index][1] = quad
+        end
+      elseif type(zlayer)=="number" then
+        local z = zlayer-building.zmin
+        local index = x*ylen*zlen+y*zlen+z+1
+        building[index][1] = quad
+      end
+        
       
     end
   end
@@ -77,11 +85,21 @@ local function setBuildingTop(building,zlayer,startx,starty,endx,endy)--左上�
   assert((endy-starty+1)==ylen,"layerY != ylen")
   assert(zlayer>=building.zmin and zlayer<=building.zmax,"zlayer out range")
   starty,endy = endy,starty
-  local z = zlayer-building.zmin
+  
   for x = 0,xlen-1 do
     for y= 0,ylen-1 do
-      local index = x*ylen*zlen+y*zlen+z+1
-      top[index] = love.graphics.newQuad((startx+x)*otersize,(starty-y)*otersize,otersize,otersize,imgw,imgh)
+      local quad = love.graphics.newQuad((startx+x)*otersize,(starty-y)*otersize,otersize,otersize,imgw,imgh)
+      if zlayer=="all" then
+        for z = building.zmin,building.zmax do
+          local index = x*ylen*zlen+y*zlen+z+1
+          top[index] = quad
+        end
+      elseif type(zlayer)=="number" then
+        local z = zlayer-building.zmin
+        local index = x*ylen*zlen+y*zlen+z+1
+        top[index] = quad
+      end
+      
     end
   end
 end
@@ -98,38 +116,47 @@ local shadow_c0 = love.graphics.newQuad(2*otersize,2*otersize,otersize,otersize,
 local function setNormalTop(building,zlayer)
   local xlen,ylen,zlen = building.xlen,building.ylen,building.zlen
   local top = building.top
-  local z = zlayer-building.zmin
   for x = 0,xlen-1 do
     for y= 0,ylen-1 do
-      local index = x*ylen*zlen+y*zlen+z+1
+      local quad
       if x==xlen-1 then 
         if y==0 then --角落
           if xlen==1 then 
             if ylen==1 then
-              top[index] = shadow_c0
+              quad = shadow_c0
             else
-              top[index] = shadow_cx
+              quad = shadow_cx
             end
           else
             if ylen==1 then
-              top[index] = shadow_cy
+              quad = shadow_cy
             else
-              top[index] = shadow_cc
+              quad = shadow_cc
             end
           end
         else
           if y==ylen-1 then
-            top[index] = shadow_y1
+            quad = shadow_y1
           else
-            top[index] = shadow_y2
+            quad = shadow_y2
           end
         end
       elseif y==0 then
         if x==0 then
-            top[index] = shadow_x1
+            quad = shadow_x1
           else
-            top[index] = shadow_x2
+            quad = shadow_x2
         end
+      end
+      if zlayer=="all" then
+        for z = building.zmin,building.zmax do
+          local index = x*ylen*zlen+y*zlen+z+1
+          top[index] = quad
+        end
+      elseif type(zlayer)=="number" then
+        local z = zlayer-building.zmin
+        local index = x*ylen*zlen+y*zlen+z+1
+        top[index] = quad
       end
     end
   end
@@ -141,9 +168,9 @@ setBuildingLayerQuad(tmp_building,1,1,5,2,6)
 setNormalTop(tmp_building,1)
 
 
-tmp_building = newBuilding("shelter",1,1,1,1)
-setBuildingLayerQuad(tmp_building,1,3,2,3,2)
-setNormalTop(tmp_building,1)
+tmp_building = newBuilding("shelter",1,1,2,0)
+setBuildingLayerQuad(tmp_building,"all",3,2,3,2)
+setNormalTop(tmp_building,"all")
 
 
 

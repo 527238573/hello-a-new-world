@@ -55,11 +55,10 @@ end
 ]]--
 
 
-function draw.drawAllSubmaps()--绘制屏幕内
+function draw.drawAllSubmaps(z)--绘制屏幕内
   love.graphics.setColor(255,255,255)
   local subx = editor.map.subx
   local suby = editor.map.suby
-  local z = editor.curZ
   local perSubmapl = c.squarePixels * c.submapSide
   
   local startx = math.floor(editor.seen_minX/perSubmapl)

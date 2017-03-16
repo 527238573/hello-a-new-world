@@ -58,11 +58,11 @@ function ui.overmapSceneKeypressed(key)
   
 end
 
-
+local mainpanel = require "ui/component/mainPanel"
 function ui.overmapScene(dt)
   touch()
   keymove(dt)
-  suit:Panel(panel_id,c.win_W - ui.overmap.right_w,0,ui.overmap.right_w,c.win_H)
+  mainpanel(panel_id,c.win_W - ui.overmap.right_w,0,ui.overmap.right_w,c.win_H)
   local bbtn = suit:S9Button("返回",back_opt,c.win_W-140,0,140,30)
   if bbtn.hit then 
     ui.overmapSceneQuit()

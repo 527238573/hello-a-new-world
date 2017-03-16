@@ -56,8 +56,8 @@ return function (x,y,w,h)
   suit.Label("Wall Tile:",label_opt,x,y,120,22)
   y=y+22
   for i=1,#wallList do
-    local xoff = i%7*38-38
-    local yoff = math.floor(i/7)*38
+    local xoff = (i-1)%7*38
+    local yoff = math.floor((i-1)/7)*38
     local index = wallList[i]
     local memberState = eui.PicButton(tile_data[index],x+xoff,y+yoff,tile_select ==index)
     if memberState.hit then 
@@ -69,8 +69,8 @@ return function (x,y,w,h)
   suit.Label("Single Tile:",label_opt,x,y,120,22)
   y=y+22
   for i=1,#singleList do
-    local xoff = i%7*38-38
-    local yoff = math.floor(i/7)*38
+    local xoff = (i-1)%7*38
+    local yoff = math.floor((i-1)/7)*38
     local index = singleList[i]
     local memberState = eui.PicButton(tile_data[index],x+xoff,y+yoff,tile_select ==index)
     if memberState.hit then 

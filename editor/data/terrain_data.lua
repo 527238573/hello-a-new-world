@@ -50,15 +50,34 @@ local function addTile(name,x,y,size,subdata,priority)
   table.insert(tiles_data,tile)
 end
 
+local function setLastTileData(display_name,move_cost,color,flag)
+  local tile = tiles_data[#tiles_data]
+  tile.displayname = display_name
+  tile.move_cost = move_cost
+  tile.color = color
+  tile.flag = flag
+end
+
+
 
 
 addTile("t_grass",  0,0,    32,"hierarchy",15)
+setLastTileData(tl("草地","grass"),100,"green",nil)
 addTile("t_sgrass",  0,32,   32,"hierarchy",13)
+setLastTileData(tl("草地","grass"),100,"green",nil)
 addTile("t_dirt",   0,64,   32,"hierarchy",12)
+setLastTileData(tl("泥地","dirt"),100,"brown",nil)
 addTile("t_rock",   0,96,   32,"hierarchy",14)
+setLastTileData(tl("岩石地面","rocky ground"),100,"brown",nil)
 addTile("t_air",    0,128,  32,"hierarchy",1)
+setLastTileData(tl("空","open air"),100,"light blue",nil)
+addTile("t_air_indoor",    0,128,  32,"hierarchy",1)
+setLastTileData(tl("空","open air"),100,"light blue",nil)
+
 addTile("t_water_shallow",    7*32,0,  32,"hierarchy",4)
+setLastTileData(tl("浅水","shallow water"),250,"blue",nil)
 addTile("t_water_deep",    7*32,32,  32,"hierarchy",3)
+setLastTileData(tl("深水","deep water"),400,"blue",nil)
 addTile("t_sidewalk",    7*32,32*3,  32,"hierarchy",17)
 addTile("t_pavement",    7*32,32*2,  32,"hierarchy",16)
 
@@ -72,5 +91,11 @@ addTile("t_pavement_x",    7*32,32*4,  32,"single",0)
 addTile("t_pavement_y",    8*32,32*4,  32,"single",0)
 addTile("t_pavement_p",    9*32,32*4,  32,"single",0)
 addTile("t_pavement_n",    10*32,32*4,  32,"single",0)
+addTile("t_stairs_down1",    14*32,32*4,  32,"single",0)
+addTile("t_stairs_down2",    15*32,32*4,  32,"single",0)
+addTile("t_stairs_down3",    16*32,32*4,  32,"single",0)
+addTile("t_stairs_down4",    17*32,32*4,  32,"single",0)
+
+
 
 return tiles_data

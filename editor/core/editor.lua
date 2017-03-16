@@ -17,6 +17,8 @@ function editor.init()
   editor.curZ = 1; -- 当前层数
   editor.curDirection  =1; --朝向 1-4，顺时针 上-右-下-左
   editor.showGrid = false
+  editor.showBlock = true
+  editor.showDownLayer = false
   --可视中心点坐标及其移动范围，坐标系采用标准上Y右X，与屏幕坐标系不同
   editor.center_minX = 0
   editor.center_maxX = c.submapSide *c.squarePixels 

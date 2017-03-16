@@ -114,6 +114,15 @@ function c.weightT(wt)
   end
   return r
 end
+function c.pushWeightVal(wt,val,weight)
+  local lastwight = 0
+  if( wt) then lastwight = wt.weight[#wt.weight] end
+  wt= wt or {val = {},weight={}}
+  table.insert(wt.val,val)
+  table.insert(wt.weight,weight+lastwight)
+  return wt
+end
+
 
 
 --全局常量
