@@ -62,6 +62,20 @@ function player_mt:updateAnim(dt)
 end
 
 
-
-
+function player_mt:save()
+  local playerfile = g.profile_savedir.."/player"
+  local tableToSave = {
+      x = self.x,y = self.y,z=self.z,
+      face = self.face,
+    }
+  table.save(tableToSave,playerfile)
+  
+end
+function player_mt:load()
+  local playerfile = g.profile_savedir.."/player"
+  local tloaded = table.load(playerfile)
+  self.face = tloaded.face
+  g.player:setPosition(tloaded.x,tloaded.y,tloaded.z)
+  ui.camera.resetToPlayerPosition()
+end
 

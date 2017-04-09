@@ -311,6 +311,7 @@ return {
 					},
 					[2] = {
 						ter = "t_rock",
+						block = "f_none",
 					},
 					[14] = {
 						ter = "t_floor",
@@ -361,6 +362,7 @@ return {
 					},
 					[2] = {
 						ter = "t_rock",
+						block = "f_stairs_up2",
 					},
 					[14] = {
 						ter = "t_floor",
@@ -848,14 +850,14 @@ return {
 					},
 					[8] = {
 						ter = "t_floor",
-						block = "f_door",
+						block = "f_door_c",
 					},
 					[3] = {
 						ter = "t_wall_house",
 					},
 					[7] = {
 						ter = "t_floor",
-						block = "f_door",
+						block = "f_door_c",
 					},
 					[15] = {
 						ter = "t_wall_house",
@@ -1143,6 +1145,7 @@ return {
 					},
 					[14] = {
 						ter = "t_floor",
+						block = "f_stairs_up1",
 					},
 					[13] = {
 						ter = "t_floor",
@@ -1408,7 +1411,7 @@ return {
 				[8] = {
 					[0] = {
 						ter = "t_floor",
-						block = "f_door",
+						block = "f_door_c",
 					},
 					[1] = {
 						ter = "t_floor",
@@ -1454,7 +1457,7 @@ return {
 					},
 					[15] = {
 						ter = "t_floor",
-						block = "f_door",
+						block = "f_door_c",
 					},
 					[6] = {
 						ter = "t_floor",
@@ -1514,7 +1517,7 @@ return {
 				[7] = {
 					[0] = {
 						ter = "t_floor",
-						block = "f_door",
+						block = "f_door_c",
 					},
 					[1] = {
 						ter = "t_floor",
@@ -1557,7 +1560,7 @@ return {
 					},
 					[15] = {
 						ter = "t_floor",
-						block = "f_door",
+						block = "f_door_c",
 					},
 					[6] = {
 						ter = "t_floor",
@@ -1603,14 +1606,14 @@ return {
 					},
 					[8] = {
 						ter = "t_floor",
-						block = "f_door",
+						block = "f_door_c",
 					},
 					[3] = {
 						ter = "t_wall_house",
 					},
 					[7] = {
 						ter = "t_floor",
-						block = "f_door",
+						block = "f_door_c",
 					},
 					[15] = {
 						ter = "t_wall_house",
@@ -1929,6 +1932,7 @@ return {
 					},
 					[15] = {
 						ter = "t_roof",
+						block = "f_none",
 					},
 					[6] = {
 						ter = "t_roof",
@@ -2029,6 +2033,7 @@ return {
 					},
 					[15] = {
 						ter = "t_roof",
+						block = "f_stairs_down3",
 					},
 					[6] = {
 						ter = "t_roof",
@@ -2490,7 +2495,7 @@ return {
 	weight = 100,
 	building_name = "shelter",
 	subx = 1,
-	suby = 1,
 	highz = 2,
+	suby = 1,
 	lowz = 0,
 }

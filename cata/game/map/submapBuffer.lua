@@ -4,7 +4,7 @@ local gmap = g.map
 local null_t = c.null_t
 
 local all_overmaps = {} --数据结构根table
-local buffermap_in_use = {}--使用中的buffermap
+local submap_in_use = {}--使用中的所有submap
 
 local last_request_overmap --最近取得的overmap坐标
 local last_ro_x,last_ro_y -- 最近的读取坐标
@@ -36,7 +36,6 @@ local function get_or_create_buffermap(overmap, x,y,z)
   bm = {}
   for i = 1,256 do bm[i] = null_t end --预填充，保证数据结构为数组
   overmap[index] = bm
-  table.insert(buffermap_in_use,bm)
   return bm
 end
 
@@ -47,12 +46,28 @@ function gmap.initSubmapBuffer()
   
 end
 
+
+local last_request_submap--缓存
+local last_rs_x,last_rs_y,last_rs_z
+function gmap.get_submap(x,y,z)
+  if x==last_rs_x and y==last_rs_y and z==last_rs_z then
+    return last_request_submap
+  else
+    last_request_submap = gmap.lookupSubmap(x,y,z)
+    return last_request_submap
+  end
+end
+
+
+
 function gmap.resetSubmapBuffer()
   all_overmaps = {}
-  buffermap_in_use = {}
+  submap_in_use = {}
   last_request_overmap= nil
   last_ro_y = nil
   last_ro_x = nil
+  last_request_submap= nil
+  last_rs_x =nil;last_rs_y=nil;last_rs_z=nil
 end
 
 --将submap保存在mapbuffer中，如果已有值，不能替代
@@ -67,8 +82,14 @@ function gmap.addSubmap(x,y,z,subm)
   sy = bit.band(y,15)
   if bm[sx*16+sy+1] ==null_t then
     bm[sx*16+sy+1] = subm
+    if x==last_rs_x and y==last_rs_y and z==last_rs_z then last_request_submap = subm end--改变时更新缓存
+    submap_in_use[#submap_in_use+1] = subm --插入单一列表，方便统计总数，查看内存占用
+    --坐标
+    subm.raw.x = x
+    subm.raw.y = y
+    subm.raw.z = z
   else
-    debugmsg("addSubmap:already existing x:"..x.." y:"..y.."z:"..z)
+    debugmsg("ERROR:addSubmap:already existing x:"..x.." y:"..y.."z:"..z)
   end
 end
 
@@ -88,3 +109,48 @@ function gmap.lookupSubmap(x,y,z)
   if sm ==null_t then return nil end
   return sm
 end
+
+function gmap.unserialize_submap(x,y,z)
+  if g.newCreatedPorfile then return nil end
+  
+  local bx = bit.arshift(x,5)--使用固定常数
+  local by = bit.arshift(y,5)--使用固定常数
+  local path = g.profile_savedir.."/submap/"..bx.."."..by.."/"..x.."."..y.."."..z..".submap"
+  local submtable,err = table.load( path )
+  if submtable==nil then return nil end
+  local subm = gmap.load_submap_from_table(submtable)
+  gmap.addSubmap(x,y,z,subm)--添加到内存中
+  return subm
+end
+
+
+
+
+--保存所有submap，顺便释放内存
+function gmap.saveAllSubmaps()
+  local dirname = g.profileName.."/submap"
+  local abs_dir = g.profile_savedir.."/submap"
+  if not love.filesystem.exists(dirname) then
+    assert(love.filesystem.createDirectory(dirname),"create dir error")
+  end
+  
+  for i=1,#submap_in_use do
+    local subm = submap_in_use[i]
+    local sx = subm.raw.x
+    local sy = subm.raw.y
+    local sz = subm.raw.z
+    local bx = bit.arshift(sx,5)--使用固定常数
+    local by = bit.arshift(sy,5)--使用固定常数
+    local bname = "/"..bx.."."..by
+    local subdir_name = dirname..bname
+    local file_name = abs_dir..bname.."/"..sx.."."..sy.."."..sz..".submap"
+    gmap.save_one_submap(subm,subdir_name,file_name)
+  end
+  
+  gmap.resetSubmapBuffer()--删除所有
+  gmap.grid.addUsingSubmap()--将还有引用的加进来
+end
+
+
+
+

@@ -1,5 +1,5 @@
 
-local tableLookup
+local tableLookup--防止循环引用,查找table
 
 local function serialize(o,blank,filehandle)
 	if(blank == nil) then
@@ -34,24 +34,25 @@ end
 
 --// The Save Function
 function table.save(  tbl,filename )
-	local charS,charE = "   ","\n"
 	local file,err
 	-- create a pseudo file that writes to a string and return the string
 	if not filename then
 		file =  { write = function( self,newstr ) self.str = self.str..newstr end, str = "" }
-		charS,charE = "",""
 	-- write table to tmpfile
 	elseif filename == true or filename == 1 then
-		charS,charE,file = "","",io.tmpfile()
+    file = io.tmpfile()
 	-- write table to file
 	-- use io.open here rather than io.output, since in windows when clicking on a file opened with io.output will create an error
 	else
 		file,err = io.open( filename, "w" )
 		if err then return nil,err end
 	end
+  
+  
   tableLookup = {}
   file:write("return ")
 	serialize(tbl,"",file)
+  tableLookup = nil
 	-- Return Values
 	-- return stringtable from string
 	if not filename then
@@ -69,7 +70,6 @@ function table.save(  tbl,filename )
 		return 1
 	end
 end
-
 
 function table.load( sfile )
   local tables,err

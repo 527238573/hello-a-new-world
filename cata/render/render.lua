@@ -10,6 +10,8 @@ end
 
 
 function render.draw()
+  if ui.showMainMenu then return end --
+  
   if ui.show_overmap then 
     render.drawOvermap()
   else

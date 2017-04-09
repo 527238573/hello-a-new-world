@@ -1,5 +1,6 @@
 require "strict" --
 --require "console/cupid"
+require "file/saveT"
 
 --载入图片之前需预设置此项，如果延后设置对之前载入的图片无效
 love.graphics.setDefaultFilter("linear","nearest")
@@ -45,8 +46,10 @@ function love.keypressed(key)
     suit:keypressed(key)
     ui.keypressed(key)
    --if not suit.anyKeyboardFocus() then eui.handleKeyPressed(key) end
-   if key=="space" then
-     --test.testadd()
+   if key=="l" then
+     test.testnew()
+     
+    
     end
 end
 

@@ -31,3 +31,9 @@ function lock.updateAnim(dt)
     end
   end
 end
+
+function lock.cameraSet(tx,ty,tz)
+  
+  ui.camera.setCenter(tx*64,ty*64)
+  ui.camera.setZ(tz)
+end

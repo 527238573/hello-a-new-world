@@ -64,7 +64,7 @@ function gmap.getDefaultSubmapOption()
         default_coverage = c.weightT{ 
           [bi("f_none")]=460,
           [bi("f_shrub")]=3,
-          [bi("f_underbush")]=1,
+          [bi("f_underbrush")]=1,
         },
     },
     
@@ -73,7 +73,7 @@ function gmap.getDefaultSubmapOption()
       groundcover = c.weightT{[ti("t_dirt")]=3,[ti("t_grass")]=3,[ti("t_sgrass")]=2}, --森林地面
       tree = c.weightT{[bi("f_tree")]=3,},        --森林 大树组
       tree_young = c.weightT{[bi("f_tree_young")]=3,}, --森林 小树组
-      underbush = c.weightT{[bi("f_shrub")]=5,[bi("f_underbush")]=2,}, --森林灌木组
+      underbush = c.weightT{[bi("f_shrub")]=5,[bi("f_underbrush")]=2,}, --森林灌木组
     },
     openair = ti("t_air"),
     rocks = ti("t_wall_rock"),

@@ -20,6 +20,8 @@ function gmap.genBuidlingFromData(mapdata)
             local square = datasubmap[sx][sy]
             subm.raw:setTer(data.ster_name2id[square.ter],sx,sy)
             if square.block then
+              if (data.block_name2id[square.block]==nil) then debugmsg(square.block) end 
+              
               subm.raw:setBlock(data.block_name2id[square.block],sx,sy)
             end
           end

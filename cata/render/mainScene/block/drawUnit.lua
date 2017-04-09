@@ -5,6 +5,7 @@ local camera = ui.camera
 
 
 local function drawAnimation(unit,x,y,z)
+  local anim = unit.anim 
   --声明一个带闭包的回调函数
   local function drawcall(face,rate,dx,dy,rotation,scaleX,scaleY)
     rotation = rotation or 0
@@ -29,11 +30,20 @@ local function drawAnimation(unit,x,y,z)
   
     local scale = camera.zoom*animList.scalefactor
     local screenx,screeny = camera.modelToScreen(x*64 +32+dx,y*64+dy+0.5*animList.height*animList.scalefactor)
+    if anim.scissor then
+      local scissor_x,scissor_y = camera.modelToScreen(x*64+anim.scissor[1],y*64+anim.scissor[2])
+      love.graphics.setScissor(scissor_x+rm.shiftX,scissor_y+rm.shiftY,anim.scissor[3],anim.scissor[4])
+      
+    end
     love.graphics.draw(image,screenx,screeny,rotation,scale*sacleface*scaleX,scale*scaleY,0.5*animList.width,0.5*animList.height)--绘制中心点
+    if anim.scissor then
+      love.graphics.setScissor()
+    end
+    
+    
   end
   
   --寻找animation处理函数，
-  local anim = unit.anim 
   if anim.method ==nil then
     anim.method = rm.animationMethod[anim.name]
   end

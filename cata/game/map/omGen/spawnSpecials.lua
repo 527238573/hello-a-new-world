@@ -60,7 +60,7 @@ local function attempt_place_special(cur_om,special,px,py,city)
       roadx = roadx+px
       roady = roady+py
       local oter_id = cur_om:getOterOrNil(roadx,roady,1)
-      if oter_id==nil or (not data.oter[oter_id].allow_road) then valid = false end
+      if oter_id==nil or (not data.oter[oter_id].allow_road) then valid = false end --todo： 不能放置在river旁
     end
     
     if valid then

@@ -2,15 +2,50 @@
 
 
 local dp_water = tid("t_water_deep")
+local forest_otid = oid("forest")
+local forest_thick_otid = oid("forest_thick")
+
 local function field(oter_id,subm,gendata,setting)
   local terWeightT = setting.default_groundcover  ------todo：   setting不完整时应有默认生成选项
   local blockWeightT = setting.field_coverage.default_coverage
+  local forest_gound_cover = setting.forest.groundcover
+  --添加树林旁草地
+  local factors = {} --每个方向上的参数 1=上北 2 = 右东 3 = 下南 4= 左西 
+  for i=1,4 do
+    if gendata[i] == forest_otid then
+      factors[i] = 7
+    elseif gendata[i] == forest_thick_otid then
+      factors[i] = 10
+    else
+      factors[i] = 0
+    end
+  end
+  
   local raw = subm.raw
   local pick = c.getWeightValue
   for x=0,15 do
     for y = 0,15 do
-      raw:setTer(pick(terWeightT),x,y)              --设置每个ter根据权重表
-      raw:setBlock(pick(blockWeightT),x,y)
+      local forest_chance = 0
+      if 15-y< factors[1] then
+        forest_chance = forest_chance+ math.max(factors[1] -(15-y),0)
+      end
+      if 15-x< factors[2] then
+        forest_chance = forest_chance+ math.max(factors[2] -(15-x),0)
+      end
+      if y< factors[3] then
+        forest_chance = forest_chance+ math.max(factors[3] -y,0)
+      end
+      if x< factors[4] then
+        forest_chance = forest_chance+ math.max(factors[4] -x,0)
+      end
+      if forest_chance>6 or rnd(1,6)<=forest_chance then
+        
+        raw:setTer(pick(forest_gound_cover),x,y)              
+        raw:setBlock(pick(blockWeightT),x,y)
+      else
+        raw:setTer(pick(terWeightT),x,y)              --设置每个ter根据权重表
+        raw:setBlock(pick(blockWeightT),x,y)
+      end
     end
   end    
 end
@@ -19,8 +54,6 @@ end
 g.map.add_mapgen_function("field",field);
 
 
-local forest_otid = oid("forest")
-local forest_thick_otid = oid("forest_thick")
 local function forest(oter_id,subm,gendata,setting)
   local forest_setting = setting.forest
   local raw = subm.raw

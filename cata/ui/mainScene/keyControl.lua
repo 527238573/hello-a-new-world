@@ -17,8 +17,19 @@ function ui.mainKeypressed(key)
         table.insert(priority_wasd,1,key)
       return
     end
-    
   end
+  
+  
+  if g.checkControl() == false then return end
+  if key=="space" then
+    player:spaceAction()
+    
+  elseif key=="z" then
+    ui.camera.setZ( ui.camera.cur_Z+1)
+  elseif key=="x" then
+    ui.camera.setZ( ui.camera.cur_Z-1)
+  end
+  
 end
 
 

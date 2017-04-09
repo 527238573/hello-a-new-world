@@ -9,7 +9,7 @@ local grid  ={} -- 存储所有submap
 gmap.grid = grid
 grid.grid_length = grid_length
 grid.grid_height = grid_height
-
+gmap.minimap_dirty = true--关系到minimap是否重建
 local updateLimitedField --函数声明
 
 
@@ -21,6 +21,8 @@ function gmap.initGridCache()
       end
     end
   end
+  grid.csquareX = 0
+  grid.csquareY = 0
   grid.centerX = 0
   grid.centerY = 0
   grid.centerZ = -100   --不可能的值，用做初始状态
@@ -55,6 +57,7 @@ end
 --]]
 --输入坐标为square坐标 ,必须是合法值，即z在范围内
 function gmap.setGridCenterSquare(x,y,z)
+  grid.csquareX = x;grid.csquareY = y;--记录详细square位置
   x= bit.arshift(x,4)
   y= bit.arshift(y,4)--取得submap坐标
   
@@ -74,7 +77,8 @@ function gmap.setGridCenterSquare(x,y,z)
       gmap.reloadGrid()
     end
     gmap.rebuildUnitCache()
-    
+    gmap.zLevelCache.setAllDirty()
+    gmap.minimap_dirty = true
   end
 end
 
@@ -139,8 +143,11 @@ end
 function gmap.loadSubmapToGridCache(x,y,z)
   if z<c.Z_MIN or z>c.Z_MAX then return null_t end
   local sm  =gmap.lookupSubmap(x,y,z) -- 在内存中查找
-  --省略读取文件
+  --读取文件:内存中找不到，在磁盘中找
   if sm ==nil then 
+    sm =gmap.unserialize_submap(x,y,z)
+  end
+  if sm ==nil then --都没找到，新生成
     sm = gmap.generateSubmap(x,y,z)
   end
   return sm
@@ -155,6 +162,9 @@ function gmap.getSubmapInGrid(x,y,z)
     return grid[(z-grid.minZsub)*81+(x-grid.minXsub)*9+(y-grid.minYsub)+1]
   end
   return nil
+end
+function gmap.getRelativeSubmapInGrid(x,y,z) --未检查，小心使用
+  return grid[z*81+x*9+y+1]
 end
 
 
@@ -186,10 +196,24 @@ function gmap.isWallTerInGrid(x,y,z)
   
 end
 
+function grid.getSeenOrigen()
+  --就已palyer为中心
+  return player.x - grid.minXsquare,player.y - grid.minYsquare,player.z - grid.minZsub
+end
 
 
-
-
+function grid.addUsingSubmap()
+  for x = 0,grid_length-1 do 
+    for y = 0,grid_length-1 do
+      for z = 0,grid_height -1 do 
+        local subm = grid[z*81+x*9+y+1]
+        if subm~= null_t then
+          gmap.addSubmap(grid.minXsub+x,grid.minYsub+y,grid.minZsub+z,subm)
+        end
+      end
+    end
+  end
+end
 
 
 

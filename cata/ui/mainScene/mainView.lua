@@ -28,6 +28,13 @@ function camera.setCenter(x,y)
   camera.updateSeenRect()
 end
 
+function camera.setZ(z)
+  z = c.clamp(z,grid.minZsub,grid.maxZsub)
+  z = c.clamp(z,c.Z_MIN,c.Z_MAX)
+  --小地图也变幻
+  if z~= camera.cur_Z then g.map.minimap_dirty = true end
+  camera.cur_Z = z
+end
 
 function camera.setZoom(zoom)
   camera.zoom = c.clamp(zoom,0.5,1)

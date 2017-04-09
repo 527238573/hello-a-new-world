@@ -27,20 +27,45 @@ getsubmap = g.map.getSubmapInGrid
 local checkCache -- 检查缓存，释放一段时间未使用的
 
 
+
+function rm.drawLowTerrainLayer(zcache)
+  love.graphics.setColor(255,255,255)
+  local startx = math.floor(camera.seen_minX/submapLength)
+  local starty = math.floor((camera.seen_minY+20)/submapLength)
+  local endx = math.floor((camera.seen_maxX)/submapLength) 
+  local endy = math.floor((camera.seen_maxY+32+20)/submapLength)--额外多画的部分
+  local z = camera.cur_Z-1
+  if z<c.Z_MIN or z>c.Z_MAX then return end
+  local grid = g.map.grid
+  
+  for y= starty,endy do -- 从下至上
+    for x= startx,endx do
+      local smx =x-grid.minXsub 
+      local smy =y-grid.minYsub
+      if smx>=0 and smx<=8 and smy>=0 and smy<=8 then
+        --内部
+        if zcache.submapfloor[smx][smy] ==false then
+          --可透底的submap
+          local subm = getsubmap(x,y,z)
+          if subm~=nil and subm ~=null_t then
+            drawSubmap(subm,x,y,z)--传送 需要画的map及其 model坐标等
+          end
+        end
+      end
+    end
+  end
+  
+end
+
+
 function rm.drawTerrainLayer()
   curTimestamp = love.timer.getTime()
-  
   love.graphics.setColor(255,255,255)
-  
-  local tmp_cx,tmp_cy = camera.centerX,camera.centerY
-  
   
   local startx = math.floor(camera.seen_minX/submapLength)
   local starty = math.floor(camera.seen_minY/submapLength)
   local endx = math.floor((camera.seen_maxX)/submapLength) 
   local endy = math.floor((camera.seen_maxY+32)/submapLength)--额外多画的部分
-  
-  
   
   local z = camera.cur_Z
   for y= starty,endy do -- 从下至上
@@ -52,7 +77,6 @@ function rm.drawTerrainLayer()
     end
   end
   checkCache()
-  --camera.setCenter(tmp_cx,tmp_cy)
 end
 
 -- todo:缓存起来的地形对边缘部分 未生成的submap未能正确处理，新生成的submap边缘不能反应在旧地图中

@@ -69,8 +69,8 @@ function overmapBase.generate(x,y)
   cur_om:setOter(building[0*2*1+1*1+0+1].base_id,10,11,1)
   cur_om:setOter(building[1*2*1+1*1+0+1].base_id,11,11,1)
   
-  print(building[0*2*1+0*1+0+1].base_id)
-  io.flush()
+  --print(building[0*2*1+0*1+0+1].base_id)
+  --io.flush()
   
   
   --]]
@@ -261,7 +261,7 @@ function Om_Gen.placeRiver()
 end
 
 function Om_Gen.connectRiver(startp,endp,river_oter)
-  debugmsg("connenct river")
+  --debugmsg("connenct river")
   
   local function setRiverter(x,y)
     if(x>=0 and x<=255 and y>=0 and y<=255) then cur_om:setOter(river_oter,x,y,1) end

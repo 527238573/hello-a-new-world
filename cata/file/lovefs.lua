@@ -93,11 +93,14 @@ local filesystem = {}
 filesystem.__index = filesystem
 
 function filesystem:absPath(path)
+  --debugmsg(path)
 	if path == '.' then path = self.current end
 	if (path:sub(1,2) == '.'..self.sep) then path = self.current..path:sub(2) end
 	if self.win then
 		if not (path:sub(2,2) == ':') then path = self.current..self.sep..path end
+    --debugmsg(path)
 		path = path:gsub('/', self.sep)
+    --debugmsg(path)
 	else
 		if not (path:sub(1,1) == '/') then path = self.current..self.sep..path end
 		path = path:gsub('\\', self.sep)
@@ -255,6 +258,16 @@ function filesystem:updDrives()
 		table.insert(drives, 1, '/')
 	end
 	self.drives = drives
+end
+
+
+function filesystem:makedir(abspath)
+  os.execute("mkdir \""..abspath.."\"")
+end
+function filesystem:removedir(abspath)
+  if self.win then
+    os.execute("rd \""..abspath.."\"")
+  end
 end
 
 --[[ lovefs 状态机：

@@ -285,18 +285,51 @@ local function road(oter_id,subm,gendata,setting)
   elseif state ==1 or state==2 or state ==3 then
     subm:fillTer(pavement)
     --画出黄线
-    if is_road_t[1] and is_road_t[3] then
-      for y = 0,15 do 
-        if y%4 ~= 3 then 
-          raw:setTer(yellowLiney,7,y);
-          raw:setTer(yellowLiney,8,y);
+    -- 道路尽头
+    if state ==1 then
+      if is_road_t[1] then
+        for y = 7,15 do 
+          if y%4 ~= 3 then 
+            raw:setTer(yellowLiney,7,y);
+            raw:setTer(yellowLiney,8,y);
+          end
+        end
+      elseif is_road_t[2] then
+        for x = 7,15 do
+          if x%4 ~= 3 then 
+            raw:setTer(yellowLinex,x,7);
+            raw:setTer(yellowLinex,x,8);
+          end
+        end
+      elseif is_road_t[3] then
+        for y = 0,8 do 
+          if y%4 ~= 3 then 
+            raw:setTer(yellowLiney,7,y);
+            raw:setTer(yellowLiney,8,y);
+          end
+        end
+      elseif is_road_t[4] then
+        for x = 0,8 do
+          if x%4 ~= 3 then 
+            raw:setTer(yellowLinex,x,7);
+            raw:setTer(yellowLinex,x,8);
+          end
         end
       end
-    elseif is_road_t[2] and is_road_t[4] then
-      for x = 0,15 do
-        if x%4 ~= 3 then 
-          raw:setTer(yellowLinex,x,7);
-          raw:setTer(yellowLinex,x,8);
+    else --直路或三叉
+      if is_road_t[1] and is_road_t[3] then
+        for y = 0,15 do 
+          if y%4 ~= 3 then 
+            raw:setTer(yellowLiney,7,y);
+            raw:setTer(yellowLiney,8,y);
+          end
+        end
+      elseif is_road_t[2] and is_road_t[4] then
+        for x = 0,15 do
+          if x%4 ~= 3 then 
+            raw:setTer(yellowLinex,x,7);
+            raw:setTer(yellowLinex,x,8);
+          end
         end
       end
     end

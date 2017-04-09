@@ -11,8 +11,7 @@ om=overmaps[x][y] 存储一个overmap
 
 
 
-local overmaps = {}--存储数据的网格 
-overmapBase.overmaps = overmaps
+local overmaps = {}--存储数据的网格
 
 local unseen_id--用于返回值
 local river_id--用于判定
@@ -49,7 +48,12 @@ function overmapBase.addOvermap(om,x,y)
   end
 end
 
-
+function overmapBase.resetAll()
+  overmaps = {}
+  last_request_overmap = nil --重置缓存
+  last_ro_x = nil
+  last_ro_y = nil
+end
 
 
 --全局oter坐标，最速读取  返回整数类型的 oter类型  (对于任何未生成的或不可见的均返回unseen)
@@ -87,3 +91,41 @@ function overmapBase.isRoad(oter_id)
   return oter_id == road_id
 end
 
+function overmapBase.save()
+  local dirname = g.profileName.."/overmap"
+  local abs_dir = g.profile_savedir.."/overmap"
+  if not love.filesystem.exists(dirname) then
+    assert(love.filesystem.createDirectory(dirname),"create dir error")
+  end
+  for x,ylist in pairs(overmaps) do
+    for y,om in pairs(ylist) do
+      overmapBase.saveOneOvermap(om,x,y,abs_dir)
+    end
+  end
+end
+
+function overmapBase.load()
+  overmapBase.resetAll()
+  local omdirpath = g.profile_savedir.."/overmap"
+  local files = love.filesystem.getDirectoryItems(g.profileName.."/overmap")
+   for _, filename in ipairs(files) do 
+    debugmsg("load omfile:"..filename)
+    if filename:sub(1,2)=="o." then
+      local dot = string.find(filename,"%.",3)
+      local xstr = string.sub(filename,3,dot-1)
+      local ystr = string.sub(filename,dot+1)
+      local ox = tonumber(xstr)
+      local oy = tonumber(ystr)
+      if ox==nil or oy==nil then
+        debugmsg("error overmap filename:"..filename)
+      else
+        local onepath = omdirpath.."/"..filename
+        local omtable = table.load(onepath) 
+        if omtable==nil then debugmsg("error overmap load unknow:"..filename)end
+        local om = overmapBase.load_overmap_from_table(omtable)
+        overmapBase.addOvermap(om,ox,oy)
+      end
+    end
+  end
+  
+end

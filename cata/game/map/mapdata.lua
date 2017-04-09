@@ -26,6 +26,17 @@ local function loadTerTable(ter_t)
     ter_name2id[v.name] = #ter_list
     v.id = #ter_list --记录id
   end
+  
+  --连接字符串为id
+  for i= 1 ,#ter_list do
+    if ter_list[i].rotate then
+      local rt = ter_list[i].rotate
+      rt[1] = ter_name2id[rt[1]]
+      rt[2] = ter_name2id[rt[2]]
+      rt[3] = ter_name2id[rt[3]]
+    end
+  end
+  
 end
 
 local function loadBlockTable(block_t)
@@ -35,6 +46,17 @@ local function loadBlockTable(block_t)
     block_name2id[v.name] = #block_list
     v.id = #block_list --记录id
   end
+  --连接字符串为id
+  for i= 1 ,#block_list do
+    if block_list[i].rotate then
+      local rt = block_list[i].rotate
+      rt[1] = block_name2id[rt[1]]
+      rt[2] = block_name2id[rt[2]]
+      rt[3] = block_name2id[rt[3]]
+    end
+  end
+  
+  
 end
 
 

@@ -7,7 +7,12 @@
 test={}
 
 
-
+function test.testnew()
+  --debugmsg("curZ:"..ui.camera.cur_Z)
+  if not ui.showMainMenu then
+    g.save()
+  end
+end
 
 
 function test.testadd()
