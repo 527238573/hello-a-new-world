@@ -10,12 +10,14 @@ require"game/unit/animData"
 require"game/map/map"
 require"game/player/player"
 require"game/camera/cameraLock"
+require"game/monster/critterTracker"
 
 function g.init()
   g.savehome = love.filesystem.getSourceBaseDirectory().."/save"
   data.loadOterData()--载入数据
   data.loadTerAndBlockData()
   data.loadAnimationData()
+  data.loadMonsterData()
   g.newCreatedPorfile = true --提前设置好，
   g.map.init()
   
@@ -58,11 +60,13 @@ end
 --update roguelike系统的时间（游戏模型的时间）
 function g.updateRL(dt)
   g.player:updateRL(dt)
+  g.monster.updateRL(dt)
 end
 --update 真实流逝的时间，用于驱动动画等
 function g.updateAnim(dt)
   g.player:updateAnim(dt)
   g.cameraLock.updateAnim(dt)
+  g.monster.updateAnim(dt)
 end
 
 function g.update(dt)

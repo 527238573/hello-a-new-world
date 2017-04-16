@@ -26,20 +26,20 @@ function player_mt:moveAction(dx,dy)
   local dest_y = self.y+dy
   local dest_z = self.z
   
+  self.face =  face_table[(dy+1)*3 +dx+2] --转向无代价？
   local move_cost = gmap.square_movecost(dest_x,dest_y,dest_z)
   if move_cost<=0 then return end --不能移动
+  local destunit = gmap.getUnitInGrid(dest_x,dest_y,dest_z)
+  if destunit then return end--有单位不能移动
+  
   local costtime  = move_cost/75
   costtime = (dx~=0 and dy~=0) and costtime*1.4 or costtime
-  costtime = costtime/3
+  costtime = costtime/c.timeSpeed
   self:setPosition(self.x+dx,self.y+dy,self.z)
-  
-  self.anim = {name = "move",start_x = -64*dx,start_y = -64*dy,totalTime = costtime,pastTime = -self.delay}
+  self:setAnimation({name = "move",start_x = -64*dx,start_y = -64*dy,totalTime = costtime})
   ui.camera.setZ(self.z)
   g.cameraLock.cameraMove(self.x-dx,self.y-dy,self.x,self.y,costtime,-self.delay)
   self:addDelay(costtime)
-  
-  self.face =  face_table[(dy+1)*3 +dx+2]
-  
 end
 
 --press space key
@@ -59,13 +59,13 @@ end
 function player_mt:go_stairs(dx,dy,dz)
   debugmsg("go stairs")
   --检查
-  local costtime = 0.7
+  local costtime = 2.1/c.timeSpeed
   self:setPosition(self.x+dx,self.y+dy,self.z+dz)
-  local anim = {name = "move",start_x = -64*dx,start_y = -64*dy,totalTime = costtime,pastTime = -self.delay}
+  local anim = {name = "move",start_x = -64*dx,start_y = -64*dy,totalTime = costtime}
   if dx~=0 then anim.start_y = anim.start_y-20*dz else anim.start_y = anim.start_y-20*dz end
   if dz>0 then anim.scissor = {0,64,64,85}end
   self.face =  face_table[(dy+1)*3 +dx+2]
-  self.anim = anim
+  self:setAnimation(anim)
   self:addDelay(costtime)
   g.cameraLock.cameraSet(self.x,self.y,self.z)
 end

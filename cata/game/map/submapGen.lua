@@ -22,7 +22,6 @@ function gmap.loadSubmapGen()
   end
   
   local fs = lovefs(love.filesystem.getSource().."/data/mapgen_builtin")
-  debugmsg("same url:"..love.filesystem.getSource().."/data/mapgen_builtin")
   for _, v in ipairs(fs.files) do --
     local tmp = dofile("data/mapgen_builtin/"..v) -- 执行文件夹内所有文件，载入所有mapgenfunction
   end

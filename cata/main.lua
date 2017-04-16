@@ -49,7 +49,7 @@ function love.keypressed(key)
    if key=="l" then
      test.testnew()
      
-    
+    --testSeeSpeed()
     end
 end
 

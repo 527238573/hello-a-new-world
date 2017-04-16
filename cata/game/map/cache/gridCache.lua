@@ -215,5 +215,8 @@ function grid.addUsingSubmap()
   end
 end
 
-
+--检查坐标是否在grid内
+function gmap.isSquareInGrid(x,y,z)
+  return z>=-10 and z<=12 and z>=grid.minZsub and z<=grid.maxZsub and x>=grid.minXsquare and x<=grid.maxXsquare and y>=grid.minYsquare and y<=grid.maxYsquare 
+end
 

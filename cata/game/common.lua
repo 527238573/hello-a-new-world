@@ -23,12 +23,20 @@ c.font_x14 = love.graphics.newFont("assets/fzfs.ttf",14);
 
 
 c.null_t = {}
-
-
+c.timeSpeed = 3
+c.face_table = {7,6,5,8,1,4,1,2,3}
 
 function c.clamp(x,min,max)
   return x>max and max or x<min and min or x
 end
+
+function c.dist_2d(x1,y1,x2,y2)
+  return math.sqrt((x1-x2)*(x1-x2)+ (y1-y2)*(y1-y2))
+end
+function c.dist_3d(x1,y1,z1,x2,y2,z2)
+  return math.sqrt((x1-x2)*(x1-x2)+ (y1-y2)*(y1-y2)+(z1-z2)*(z1-z2))
+end
+
 
 function tl(str)
   return str

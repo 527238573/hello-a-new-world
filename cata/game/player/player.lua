@@ -43,6 +43,11 @@ function player_mt:addDelay(toadd)
   self.delay = self.delay+toadd
 end
 
+function player_mt:setAnimation(anim)
+  anim.pastTime = -self.delay
+  self.anim = anim
+end
+
 --roguelike时间
 function player_mt:updateRL(dt)
   player.delay = player.delay -dt

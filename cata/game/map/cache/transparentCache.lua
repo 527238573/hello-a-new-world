@@ -9,6 +9,7 @@ local LIGHT_TRANSPARENCY_CLEAR = 1
 function zLevelCache.buildTransparentCache(zcache,z)
   if not(z>=0 and z<=4) then error("building transparent cache out of grid")end
   if not zcache.transparent_dirty then return end
+  if z+grid.minZsub<-10 or z+grid.minZsub>12 then return end --不能超出
   local smz = z 
   --debugmsg("build transparnet rz:"..z)
   
@@ -327,6 +328,7 @@ function zLevelCache.buildSeenCache(zcache,z)
   if not(z>=0 and z<=4) then error("building transparent cache out of grid")end
   zLevelCache.buildTransparentCache(zcache,z) 
   if not zcache.seen_dirty then return end
+  if z+grid.minZsub<-10 or z+grid.minZsub>12 then return end --不能超出
   --debugmsg("build seen rz:"..z)
   
   zcache.seen_dirty  = false
@@ -401,6 +403,7 @@ end
 function zLevelCache.buildFloorCache(zcache,z)
   if not(z>=0 and z<=4) then error("building transparent cache out of grid")end
   if not zcache.floor_dirty then return end
+  if z+grid.minZsub<-10 or z+grid.minZsub>12 then return end --不能超出
   local smz = z 
   debugmsg("build floor rz:"..z)
   for smy = 8,0,-1 do

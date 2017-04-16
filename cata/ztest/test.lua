@@ -10,7 +10,8 @@ test={}
 function test.testnew()
   --debugmsg("curZ:"..ui.camera.cur_Z)
   if not ui.showMainMenu then
-    g.save()
+    --g.save()
+    g.monster.spawnNewMonster("zombie_debug",player.x,player.y+3,player.z)
   end
 end
 

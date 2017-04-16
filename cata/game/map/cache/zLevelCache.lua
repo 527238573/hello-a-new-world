@@ -58,4 +58,19 @@ function zLevelCache.setSeenDirty()
   end
 end
   
+function zLevelCache.buildAllTransparent()
+  for i=0,4 do
+    if zLevelCache[i].transparent_dirty == true then
+      zLevelCache.buildTransparentCache(zLevelCache[i],i)
+    end
+  end
+end
   
+function zLevelCache.isTranspant(x,y,z)
+  if gmap.isSquareInGrid(x,y,z) then
+    z = z- grid.minZsub
+    return zLevelCache[z].transparent[x-grid.minXsquare][y-grid.minYsquare]>0
+  else
+    return false
+  end
+end

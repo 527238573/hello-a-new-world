@@ -22,7 +22,19 @@ list[#list+1] = {
 };
 
 
-
+list[#list+1] = {
+  name = "zombie1",
+  num = 4,
+  width = 32,
+  height = 32,
+  scalefactor = 2,
+  type = "oneSide", -- single oneSide twoSide
+  pingpong  = true,
+  love.graphics.newImage("data/unit/zombie1/zombie1_1.png"),
+  love.graphics.newImage("data/unit/zombie1/zombie1_2.png"),
+  love.graphics.newImage("data/unit/zombie1/zombie1_3.png"),
+  love.graphics.newImage("data/unit/zombie1/zombie1_4.png"),
+};
 
 
 

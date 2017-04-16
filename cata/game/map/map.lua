@@ -15,6 +15,8 @@ require "game/map/submapGen"
 require "game/map/cache/gridCache"
 require "game/map/cache/unitCache"
 require "game/map/cache/zLevelCache"
+
+require "game/map/interface/seeCheck"
 function gmap.init()
   overmapBase.initOvermapBuffer()
   gmap.initSubmapBuffer()
@@ -125,6 +127,9 @@ function gmap.check_stairs(x,y,z)
     return nil,0,0--本格不是楼梯
   end
 end
+
+
+
 
 
 
