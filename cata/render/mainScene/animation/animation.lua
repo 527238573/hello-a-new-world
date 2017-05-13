@@ -1,3 +1,4 @@
+require "render/mainScene/animation/animEffect"
 local rm = render.main
 
 --动画名称和function的映射
@@ -20,7 +21,7 @@ end
 function rm.initAnimation()
   rm.animationMethod["move"] = moveAnim
   
-  
+  rm.initAnimationEffect()
 end
 
 

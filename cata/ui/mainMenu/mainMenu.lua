@@ -16,6 +16,9 @@ function ui.enterMainMenu()
     ui.showMainMenu = false
     g.createGame()
     g.profileName = "defaultProfile" --默认存档的文件夹啊
+    ui.waitingMessage(tl("创建游戏中...","creating game..."))
+    --love.timer.sleep(0.4)
+    
   end
   
   if load_state.hit then

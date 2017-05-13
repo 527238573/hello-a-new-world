@@ -50,19 +50,26 @@ local function addTile(name,x,y,size,subdata,priority)
   table.insert(tiles_data,tile)
 end
 
-local function setLastTileData(display_name,move_cost,color,transparent,flag)
+local function setLastTileData(display_name,move_cost,color,transparent,flags)
   local tile = tiles_data[#tiles_data]
   tile.displayname = display_name
   tile.move_cost = move_cost
   tile.color = color
   tile.transparent = transparent
-  if flag then 
-    for k,v in pairs(flag) do
+  if flags then 
+    for k,v in pairs(flags) do
       tile[k] = v
     end
   end
 end
-
+local function autoFlags(flags_table)
+  local tile = tiles_data[#tiles_data]
+  if flags_table then 
+    for _,v in ipairs(flags_table) do
+      tile[v] = true
+    end
+  end
+end
 
 
 
@@ -75,9 +82,9 @@ setLastTileData(tl("泥地","dirt"),100,"brown",true,nil)
 addTile("t_rock",   0,96,   32,"hierarchy",14)
 setLastTileData(tl("岩石地面","rocky ground"),100,"brown",true,nil)
 addTile("t_air",    0,128,  32,"hierarchy",1)
-setLastTileData(tl("空","open air"),100,"light_blue",true,{nofloor = true})
+setLastTileData(tl("空","open air"),100,"light_blue",true,{nofloor = true});autoFlags{"NOITEM"}
 addTile("t_air_indoor",    0,128,  32,"hierarchy",1)
-setLastTileData(tl("空","open air"),100,"light_blue",true,{nofloor = true})
+setLastTileData(tl("空","open air"),100,"light_blue",true,{nofloor = true});autoFlags{"NOITEM"}
 
 addTile("t_water_shallow",    7*32,0,  32,"hierarchy",4)
 setLastTileData(tl("浅水","shallow water"),250,"light_blue",true,nil)
@@ -89,11 +96,11 @@ addTile("t_pavement",    7*32,32*2,  32,"hierarchy",16)
 setLastTileData(tl("路面","pavement"),100,"black",true,nil)
 
 addTile("t_wall_rock",0,160,  32,"wall",100)
-setLastTileData(tl("岩壁","rock wall"),0,"dark_brown",false,nil)
+setLastTileData(tl("岩壁","rock wall"),0,"dark_brown",false,nil);autoFlags{"NOITEM"}
 addTile("t_wall_concrete",32*5,160,  32,"wall",100)
-setLastTileData(tl("墙壁","wall"),0,"grey",false,nil)
+setLastTileData(tl("墙壁","wall"),0,"grey",false,nil);autoFlags{"NOITEM"}
 addTile("t_wall_house",32*10,160,  32,"wall",100)
-setLastTileData(tl("墙壁","wall"),0,"grey",false,nil)
+setLastTileData(tl("墙壁","wall"),0,"grey",false,nil);autoFlags{"NOITEM"}
 
 addTile("t_floor",    11*32,32*4,  32,"single",0)
 setLastTileData(tl("地板","floor"),100,"floor",true,nil)

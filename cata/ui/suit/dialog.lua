@@ -2,8 +2,8 @@ local BASE = (...):match('(.-)[^%.]+$')
 
 local s9util = require(BASE.."s9util")
 
-local bg_img = love.graphics.newImage(BASE.."/assets/bg.png")
-local s9table = s9util.createS9Table(bg_img,0,0,100,79,30,4,4,4)
+local bg_img = love.graphics.newImage(BASE.."/assets/bgb.png")
+local s9table = s9util.createS9Table(bg_img,0,0,38,60,32,8,6,6)
 
 
 
@@ -21,7 +21,7 @@ end
 return function(core, idtext, ...)
 	local opt, x,y,w,h = core.getOptionsAndSize(...)
 	opt.id = opt.id or idtext
-  opt.font = opt.font or love.graphics.getFont()
+  opt.font = opt.font or c.font_c20
   
   
 	opt.state = core:registerHitbox(opt,opt.id, x,y,w,h)

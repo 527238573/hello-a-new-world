@@ -29,19 +29,19 @@ function render.renderMainScene()
     love.graphics.push()
     love.graphics.translate(0,22)
     rm.shiftX = 0
-    rm.shiftY = 22  --setScissor时要加上此变量
-    rm.drawLowTerrainLayer(zcache)
-    rm.drawLowBlocksLayerUnder(zcache)
-    rm.drawBlocksLayerUnder(zcache)
+    rm.shiftY = 22  --setScissor时要加上此变量        ---名称有点混乱，标注下
+    rm.drawLowTerrainLayer(zcache)                          --地形层
+    rm.drawLowBlocksLayerUnder(zcache)                     -- low block层
+    rm.drawBlocksLayerUnder(zcache)                        -- high block 层 
     love.graphics.pop()
     rm.shiftX = 0
     rm.shiftY = 0
     
   end
-  rm.drawTerrainLayer()
-  rm.drawLowBlocksLayer(zcache,false)
+  rm.drawTerrainLayer()                                   --地形层                         
+  rm.drawLowBlocksLayer(zcache)                           -- low block层
   --提前统一build好
-  rm.drawShadowLayer(zcache)
-  rm.drawBlocksLayer(zcache,false)
+  rm.drawShadowLayer(zcache)                               --地面阴影， 
+  rm.drawBlocksLayer(zcache)                               -- high block 层 
   --rm.drawShadowLayer()
 end

@@ -43,14 +43,17 @@ function love.textinput(t)
 end
 
 function love.keypressed(key)
-    suit:keypressed(key)
-    ui.keypressed(key)
+  suit:keypressed(key)
+  ui.keypressed(key)
    --if not suit.anyKeyboardFocus() then eui.handleKeyPressed(key) end
-   if key=="l" then
+  if key=="l" then
+     test.testAdd1()
      test.testnew()
-     
+    --g.message.addmsg("我欲成仙，快乐齐天！")
     --testSeeSpeed()
-    end
+  elseif key=="k" then
+    test.testAdd2()
+  end
 end
 
 

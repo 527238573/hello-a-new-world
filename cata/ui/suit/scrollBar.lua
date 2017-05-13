@@ -17,9 +17,9 @@ local back2_img = love.graphics.newImage(BASE.."/assets/scrollclick.png")
 local function create_btn_table(bimg)
   return {
     img = bimg,
-    normal = love.graphics.newQuad(0,0,17,17,17,51),
-    hovered= love.graphics.newQuad(0,17,17,17,17,51),
-    active = love.graphics.newQuad(0,34,17,17,17,51)
+    normal = love.graphics.newQuad(0,0,18,18,18,54),
+    hovered= love.graphics.newQuad(0,18,18,18,18,54),
+    active = love.graphics.newQuad(0,36,18,18,18,54)
   }
 end
 
@@ -30,17 +30,19 @@ local right_quads=create_btn_table(right_img)
 local vbar_quads=
 {
   img = vbar_img,
-  normal = s9util.createS9Table(vbar_img,0,0,17,21,3,3,3,3),
-  hovered= s9util.createS9Table(vbar_img,0,21,17,21,3,3,3,3),
-  active = s9util.createS9Table(vbar_img,0,42,17,21,3,3,3,3)
+  normal = s9util.createS9Table(vbar_img,0,0,18,18,4,4,4,4),
+  hovered= s9util.createS9Table(vbar_img,0,18,18,18,4,4,4,4),
+  active = s9util.createS9Table(vbar_img,0,36,18,18,4,4,4,4)
 }
-local hbar_quads=
+local hbar_quads=vbar_quads
+--[[
 {
   img = hbar_img,
   normal = s9util.createS9Table(hbar_img,0,0,21,17,3,3,3,3),
   hovered= s9util.createS9Table(hbar_img,0,17,21,17,3,3,3,3),
   active = s9util.createS9Table(hbar_img,0,34,21,17,3,3,3,3)
 }
+--]]
 
 local back_quads=
 {
@@ -52,8 +54,8 @@ local back_quads=
 local function h_disabled_scroll(core,info,opt,x,y,w,h)
   local value_changed = false
   if(w<50) then w = 50 end -- 最小
-  h=17 --固定的
-  local fang = 17
+  h=18 --固定的
+  local fang = 18
   local midw =  w -fang*2
   info.sc_hback_opt = info.sc_hback_opt or {id ={}}
   info.sc_left_opt = info.sc_left_opt or {id ={}}
@@ -80,8 +82,8 @@ local function h_scroll(core,info,opt,x,y,w,h)
   
   local value_changed = false
   if(w<50) then w = 50 end -- 最小
-  h=17 --固定的
-  local fang = 17
+  h=18 --固定的
+  local fang = 18
   local midw =  w -fang*2
   local min = info.h_min or 0
   local max = info.h_max or 1
@@ -172,8 +174,8 @@ end
 local function v_disabled_scroll(core,info,opt,x,y,w,h)
   local value_changed = false
   if(h<50) then h = 50 end -- 最小
-  w=17 --固定的
-  local fang = 17
+  w=18 --固定的
+  local fang = 18
   local midh =  h -fang*2
   info.sc_vback_opt = info.sc_vback_opt or {id ={}}
   info.sc_up_opt = info.sc_up_opt or {id ={}}
@@ -199,8 +201,8 @@ local function v_scroll(core,info,opt,x,y,w,h)
   
   local value_changed = false
   if(h<50) then h = 50 end -- 最小
-  w=17 --固定的
-  local fang = 17
+  w=18 --固定的
+  local fang = 18
   local midh =  h -fang*2
   local min = info.v_min or 0
   local max = info.v_max or 1

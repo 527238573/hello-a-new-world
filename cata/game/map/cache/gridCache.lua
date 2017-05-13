@@ -174,7 +174,8 @@ function gmap.getblockDataInGrid(x,y,z)
   local sy= bit.arshift(y,4)--取得submap坐标
   local sm = gmap.getSubmapInGrid(sx,sy,z)
   if sm==nil then return nil,nil end
-  return sm.raw:getBlock(bit.band(x,15),bit.band(y,15)),gmap.getUnitInGrid(x,y,z)
+  local lx,ly = bit.band(x,15),bit.band(y,15)
+  return sm.raw:getBlock(lx,ly),gmap.getUnitInGrid(x,y,z),sm.item[lx*16+ly+1]--物品table
 end
 
 function gmap.getBlockInGrid(x,y,z)
@@ -183,6 +184,15 @@ function gmap.getBlockInGrid(x,y,z)
   local sm = gmap.getSubmapInGrid(sx,sy,z)
   if sm==nil then return nil end
   return sm.raw:getBlock(bit.band(x,15),bit.band(y,15))
+end
+
+function gmap.getBlockAndItemsInGrid(x,y,z)
+  local sx= bit.arshift(x,4)
+  local sy= bit.arshift(y,4)--取得submap坐标
+  local sm = gmap.getSubmapInGrid(sx,sy,z)
+  if sm==nil then return nil,nil end
+  local lx,ly = bit.band(x,15),bit.band(y,15)
+  return sm.raw:getBlock(lx,ly),sm.item[lx*16+ly+1]--物品table
 end
 
 

@@ -30,12 +30,16 @@ local function drawAnimation(unit,x,y,z)
   
     local scale = camera.zoom*animList.scalefactor
     local screenx,screeny = camera.modelToScreen(x*64 +32+dx,y*64+dy+0.5*animList.height*animList.scalefactor)
+    
     if anim.scissor then
       local scissor_x,scissor_y = camera.modelToScreen(x*64+anim.scissor[1],y*64+anim.scissor[2])
       love.graphics.setScissor(scissor_x+rm.shiftX,scissor_y+rm.shiftY,anim.scissor[3],anim.scissor[4])
       
     end
+    --rm.drawUnitBackEffect(unit,x,y,z,screenx,screeny)--背后特效
     love.graphics.draw(image,screenx,screeny,rotation,scale*sacleface*scaleX,scale*scaleY,0.5*animList.width,0.5*animList.height)--绘制中心点
+    rm.drawUnitFrontEffect(unit,x,y,z,screenx,screeny)--前置特效
+    
     if anim.scissor then
       love.graphics.setScissor()
     end
@@ -65,11 +69,15 @@ local function drawIdle(unit,x,y,z)
   local scale = camera.zoom*animList.scalefactor
   local screenx,screeny = camera.modelToScreen(x*64 +32,y*64+0.5*animList.height*animList.scalefactor)
   love.graphics.draw(todraw_img,screenx,screeny,0,scale*sacleface,scale,0.5*animList.width,0.5*animList.height)--绘制，根据位置（左下点）和缩放
+  
+  rm.drawUnitFrontEffect(unit,x,y,z,screenx,screeny)--前置特效，后置暂时没有
 end
 
 
 
 function rm.drawUnit(unit,x,y,z,screenx,screeny)
+  
+  
   if unit.anim then 
     drawAnimation(unit,x,y,z)
   else

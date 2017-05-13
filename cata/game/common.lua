@@ -14,16 +14,18 @@ c.Z_LAYERS = 23 -- z总层数  在overmap   editor中使用常数         使用
 c.Z_MAX = 12  -- 最高层     1楼= 地面 （z=1）,z<=0为地下
 c.Z_MIN = -10 --最低 层
 
-
+c.font_c20 = love.graphics.newFont("assets/fzh.ttf",20);
+c.font_c16 = love.graphics.newFont("assets/fzh.ttf",16);
 c.font_c14 = love.graphics.newFont("assets/fzh.ttf",14);
 --c.font_c12 = love.graphics.newFont("assets/fzh.ttf",12);
+c.font_x16 = love.graphics.newFont("assets/fzfs.ttf",16);
 c.font_x14 = love.graphics.newFont("assets/fzfs.ttf",14);
 --c.font_x12 = love.graphics.newFont("assets/fzfs.ttf",12);
 
 
 
 c.null_t = {}
-c.timeSpeed = 3
+c.timeSpeed = 2.25
 c.face_table = {7,6,5,8,1,4,1,2,3}
 
 function c.clamp(x,min,max)

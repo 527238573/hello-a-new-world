@@ -16,7 +16,11 @@ require "game/map/cache/gridCache"
 require "game/map/cache/unitCache"
 require "game/map/cache/zLevelCache"
 
+
 require "game/map/interface/seeCheck"
+require "game/map/interface/terInterface"
+require "game/map/interface/itemInterface"
+
 function gmap.init()
   overmapBase.initOvermapBuffer()
   gmap.initSubmapBuffer()
@@ -48,38 +52,6 @@ function gmap.load()
 end
 
 
---地形与家具的结合，目前只查询grid内的
-function gmap.square_movecost(x,y,z)
-  local sx= bit.arshift(x,4)
-  local sy= bit.arshift(y,4)--取得submap坐标
-  local sm = gmap.getSubmapInGrid(sx,sy,z)
-  if sm==nil then return -1 end -- 不存在的地图标为-1
-  local lx = bit.band(x,15)
-  local ly = bit.band(y,15)
-  
-  local ter_info = data.ster[sm.raw:getTer(lx,ly)]
-  local move_cost = ter_info.move_cost
-  local bid = sm.raw:getBlock(lx,ly)
-  if bid>1 then
-    local blockinfo = data.block[bid]
-    if blockinfo.resetTM then
-      move_cost = blockinfo.move_cost
-    else
-      move_cost = move_cost +blockinfo.move_cost
-    end
-  end
-  return move_cost
-end
-
-function gmap.getTerIdAndBlockId(x,y,z)
-  local sx= bit.arshift(x,4)
-  local sy= bit.arshift(y,4)--取得submap坐标
-  local sm = gmap.get_submap(sx,sy,z)
-  if sm==nil then return -1,-1 end -- 不存在的地图标为-1
-  local lx = bit.band(x,15)
-  local ly = bit.band(y,15)
-  return sm.raw:getTer(lx,ly),sm.raw:getBlock(lx,ly)
-end
 
 
 local function getStairsOnSquare(x,y,z)
@@ -127,6 +99,7 @@ function gmap.check_stairs(x,y,z)
     return nil,0,0--本格不是楼梯
   end
 end
+
 
 
 

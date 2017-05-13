@@ -32,7 +32,7 @@ function player_mt:moveAction(dx,dy)
   local destunit = gmap.getUnitInGrid(dest_x,dest_y,dest_z)
   if destunit then return end--有单位不能移动
   
-  local costtime  = move_cost/75
+  local costtime  = move_cost/100
   costtime = (dx~=0 and dy~=0) and costtime*1.4 or costtime
   costtime = costtime/c.timeSpeed
   self:setPosition(self.x+dx,self.y+dy,self.z)
@@ -69,6 +69,47 @@ function player_mt:go_stairs(dx,dy,dz)
   self:addDelay(costtime)
   g.cameraLock.cameraSet(self.x,self.y,self.z)
 end
+
+
+--dxdy在 -1，0，1中
+function player_mt:pickOrDrop(dx,dy)
+  local posx,posy,posz = self.x+dx,self.y+dy,self.z
+  
+  --获取地格上的物品
+  if gmap.hasFlag("NOITEM",posx,posy,posz) then
+    return
+  end--更多的检查有待添加
+  
+  local itemlist = gmap.getSquareItemList(posx,posy,posz)
+  local use_tmplist = false
+  local tmplist 
+  if itemlist ==c.null_t then 
+    use_tmplist = true
+    tmplist = {}
+  else
+    tmplist=itemlist
+  end
+  local function callback()
+    debugmsg("pdwin callback")
+    if use_tmplist then
+      if #tmplist>0 then
+        gmap.setSquareItemList(tmplist,posx,posy,posz)
+      end
+    else
+      --源list
+      if #tmplist==0 then
+        --空了
+        gmap.setSquareItemList(c.null_t,posx,posy,posz)
+      end
+    end
+  end
+  ui.pickupOrDropWinOpen(#tmplist>0,tmplist,callback)
+end
+
+
+
+
+
 
 
 

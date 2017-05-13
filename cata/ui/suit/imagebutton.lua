@@ -27,6 +27,12 @@ local function defaultS9Draw(opt,quads,x,y,w,h,theme)
   end
   love.graphics.setColor(255,255,255)
   theme.drawScale9Quad(todraw,x,y,w,h)
+  if opt.text then
+    if opt.textcolor then love.graphics.setColor(opt.textcolor) else love.graphics.setColor(66,66,66) end
+    love.graphics.setFont(opt.font)
+    y = y + theme.getVerticalOffsetForAlign(opt.valign, opt.font, h-1)
+    love.graphics.printf(opt.text, x+2, y, w-4, opt.align or "center")
+  end
 end
 
 

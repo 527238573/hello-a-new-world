@@ -8,6 +8,7 @@ player实例 本身只存状态数据
 --]]
 local player_mt = {}
 g.player_mt = player_mt
+g.creature.initCharactorMetaTable(player_mt)--初始化mt——table 。将charactor函数先加入
 player_mt.__index = player_mt
 player = nil
 require "game/player/action/basicAction"
@@ -16,6 +17,7 @@ require "game/player/action/basicAction"
 function player_mt.createDefaultPlayer()
   player= {}
   local player = player
+  g.creature.initCharatorValue(player)
   
   setmetatable(player,player_mt)
   g.player = player
@@ -24,13 +26,14 @@ function player_mt.createDefaultPlayer()
   player.x = 0
   player.y = 0
   player.z = 1 --当前坐标
-  player.face = 4  --  face方向                  
+  player.face = 4  --  face方向 
+  player.inventory:setMaxCarry(3000,40)
+  
   
   player_mt.animlist = data.animation["player_mc"]
   
   --animlist ，通常是要重创建的，现在用这个默认的代替
   player.anim = {name = "move",start_x = -64,start_y = 0,totalTime = 0.44,pastTime = 0}
-  
 end
 
 
@@ -43,27 +46,10 @@ function player_mt:addDelay(toadd)
   self.delay = self.delay+toadd
 end
 
-function player_mt:setAnimation(anim)
-  anim.pastTime = -self.delay
-  self.anim = anim
-end
-
 --roguelike时间
 function player_mt:updateRL(dt)
   player.delay = player.delay -dt
   if player.delay <0 then player.delay  = 0 end
-end
-
---实际时间
-function player_mt:updateAnim(dt)
-  local anim = self.anim
-  if anim then
-    anim.pastTime = anim.pastTime+dt
-    if anim.pastTime> anim.totalTime then
-      --anim.pastTime = anim.pastTime - anim.totalTime
-      self.anim = nil --直接删除
-    end
-  end
 end
 
 

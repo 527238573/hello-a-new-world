@@ -34,7 +34,7 @@ end
 return function(core, text, ...)
 	local opt, x,y,w,h = core.getOptionsAndSize(...)
 	opt.id = opt.id or text
-	opt.font = opt.font or love.graphics.getFont()
+	opt.font = opt.font or c.font_c14 
 
 	w = w or opt.font:getWidth(text) + 4
 	h = h or opt.font:getHeight() + 4

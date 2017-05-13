@@ -4,7 +4,7 @@
 
 local priority = {"up","down","right","left"}
 local priority_wasd = {"w","a","s","d"}
-
+ui.key_g_delay = 0
 function ui.mainKeypressed(key)
   for i=1,4 do
     if(priority[i]==key) then
@@ -28,15 +28,20 @@ function ui.mainKeypressed(key)
     ui.camera.setZ( ui.camera.cur_Z+1)
   elseif key=="x" then
     ui.camera.setZ( ui.camera.cur_Z-1)
+  elseif key=="g" then
+    player:pickOrDrop(0,0)--启动
+  elseif key=="e" then
+    --ui.pickupOrDropWinOpen(false)
   end
+  
   
 end
 
 
 
-function ui.mainKeyCheck()
+function ui.mainKeyCheck(dt)
   if g.checkControl() == false then return end
-  
+  if ui.current_keypressd then return end--焦点不在主界面
   
   for i=1,4 do
     if(love.keyboard.isDown(priority[i])) then
@@ -114,5 +119,12 @@ function ui.mainKeyCheck()
     end
     
     
+  end
+  if ui.popout ==nil then --更流畅的操作
+    ui.key_g_delay =ui.key_g_delay -dt
+    if ui.key_g_delay<=0 and love.keyboard.isDown("g") then
+        player:pickOrDrop(0,0)--启动 
+      return 
+    end
   end
 end

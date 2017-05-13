@@ -3,7 +3,7 @@
 local NONE = {}
 local BASE = (...):match('(.-)[^%.]+$')
 local default_theme = require(BASE..'theme')
-
+local s9util = require(BASE.."s9util")
 local suit = {}
 suit.__index = suit
 
@@ -35,6 +35,7 @@ function suit.new(theme)
       Panel = require(BASE.."panel"),
 
       layout = require(BASE.."layout").new(),
+      createS9Table=s9util.createS9Table,
       }, suit)
 end
 

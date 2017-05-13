@@ -58,6 +58,12 @@ function ui.overmapSceneKeypressed(key)
   
 end
 
+
+function ui.overmapScene_Open()
+  ui.show_overmap = true
+end
+
+
 local mainpanel = require "ui/component/mainPanel"
 function ui.overmapScene(dt)
   touch()
@@ -72,6 +78,7 @@ end
 
 function ui.overmapSceneQuit()
   ui.show_overmap = false
+  --ui.popout = nil --不能出现这个场景的popout
   render.overmap.clearBuffer()
   collectgarbage()
 end

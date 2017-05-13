@@ -1,7 +1,7 @@
 -- This file is part of SUIT, copyright (c) 2016 Matthias Richter
 
 local BASE = (...):match('(.-)[^%.]+$')
-
+local bar_res =ui.res.somebar 
 
 local function defaultDraw(fraction, opt, x,y,w,h,theme)
 	local xb, yb, wb, hb -- size of the progress bar
@@ -13,19 +13,21 @@ local function defaultDraw(fraction, opt, x,y,w,h,theme)
 		y, h = y + h*.25, h*.5
 		xb, yb, wb, hb = x,y, w*fraction, h
 	end
-
+  bar_res = bar_res or ui.res.somebar 
 	local c = theme.getColorForState(opt)
-	theme.drawBox(x,y,w,h, c, opt.cornerRadius)
-	theme.drawBox(xb,yb,wb,hb, {bg=c.fg}, opt.cornerRadius)
-
-	if opt.state ~= nil and opt.state ~= "normal" then
-		love.graphics.setColor((opt.color and opt.color.active or {}).fg or theme.color.active.fg)
-		if opt.vertical then
-			love.graphics.circle('fill', x+wb/2, yb, r)
-		else
-			love.graphics.circle('fill', x+wb, yb+hb/2, r)
-		end
-	end
+  love.graphics.setColor(255,255,255)
+  theme.drawScale9Quad(bar_res.back,x,y,w,h)
+  --theme.drawScale9Quad(bar_res.front,x,y,w,h)
+  theme.drawScale9Quad(bar_res.front,xb,yb,wb,hb)
+	--theme.drawBox(x,y,w,h, c, opt.cornerRadius)
+	--theme.drawBox(xb,yb,wb,hb, {bg=c.fg}, opt.cornerRadius)
+  if opt.vertical then
+    love.graphics.draw(bar_res.img,bar_res.triangle, x+wb/2, yb,math.pi/2,1,1,16,16)
+  else
+    love.graphics.draw(bar_res.img,bar_res.triangle, x+wb, yb+hb/2,0,1,1,16,16)
+  end
+  
+	
 end
 
 return function(core, info, ...)
@@ -54,19 +56,7 @@ return function(core, info, ...)
 			info.value = v
 			value_changed = true
 		end
-
-		-- keyboard update
-		local key_up = opt.vertical and 'up' or 'right'
-		local key_down = opt.vertical and 'down' or 'left'
-		if core:getPressedKey() == key_up then
-			info.value = math.min(info.max, info.value + info.step)
-			value_changed = true
-		elseif core:getPressedKey() == key_down then
-			info.value = math.max(info.min, info.value - info.step)
-			value_changed = true
-		end
 	end
-
 	core:registerDraw(opt.draw or defaultDraw, fraction, opt, x,y,w,h,core.theme)
 
 	return {

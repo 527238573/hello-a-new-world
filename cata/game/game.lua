@@ -4,20 +4,31 @@ g = {}--主table
 data={}--读取的数据table
 
 require"game/base/base"
+require"game/audio/audio"
 require"game/map/omdata"--overmap terrain数据
 require"game/map/mapdata"
 require"game/unit/animData"
 require"game/map/map"
+require"game/item/inventory"
+require"game/npc/creature"--顺序
+require"game/npc/charactor"
 require"game/player/player"
 require"game/camera/cameraLock"
 require"game/monster/critterTracker"
+require"game/item/itemTypeData"
+require"game/item/itemFactory"
+
 
 function g.init()
   g.savehome = love.filesystem.getSourceBaseDirectory().."/save"
+  data.loadAudio()
   data.loadOterData()--载入数据
   data.loadTerAndBlockData()
+  data.loadItemTypeData()
   data.loadAnimationData()
   data.loadMonsterData()
+  
+  
   g.newCreatedPorfile = true --提前设置好，
   g.map.init()
   
@@ -29,6 +40,7 @@ function g.createGame()
   debugmsg("create game")
   g.newCreatedPorfile = true
   g.map.createGame()
+  g.calendar.setDate(9,7)
   g.player:setPosition(0,0,1)
 end
 
@@ -59,6 +71,7 @@ end
 
 --update roguelike系统的时间（游戏模型的时间）
 function g.updateRL(dt)
+  g.calendar.updateRL(dt)
   g.player:updateRL(dt)
   g.monster.updateRL(dt)
 end
