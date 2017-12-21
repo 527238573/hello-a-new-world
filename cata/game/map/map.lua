@@ -14,12 +14,14 @@ require "game/map/submapGen"
 
 require "game/map/cache/gridCache"
 require "game/map/cache/unitCache"
+require "game/map/cache/effectCache"
 require "game/map/cache/zLevelCache"
 
 
 require "game/map/interface/seeCheck"
 require "game/map/interface/terInterface"
 require "game/map/interface/itemInterface"
+require "game/map/interface/bashInterface"
 
 function gmap.init()
   overmapBase.initOvermapBuffer()
@@ -28,12 +30,13 @@ function gmap.init()
   
   gmap.initGridCache()
   gmap.initUnitCache()
+  gmap.initEffectCache()
   gmap.zLevelCache.init()
   
   gmap.cur_overmapGenSetting = gmap.getDefaultOvermapOption()
   gmap.cur_submapGenSetting = gmap.getDefaultSubmapOption()
   
-  
+  gmap.initBashInterface()
 end
 
 function gmap.createGame()

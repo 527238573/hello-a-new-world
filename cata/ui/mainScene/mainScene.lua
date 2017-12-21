@@ -13,7 +13,7 @@ require "ui/mainScene/messageWin"
 local mainpanel = require "ui/component/mainPanel"
 local cameraZbutton = require "ui/component/cameraZbutton"
 local bottemBar = require"ui/mainScene/bottomBar"
-
+local effectView = require"ui/mainScene/effectView"
 
 local minimapX = c.win_W-275
 local messageY = 468
@@ -31,6 +31,7 @@ function ui.mainScene(dt)
   ui.stateWin(c.win_W-275,295)
   ui.messageWin(c.win_W - ui.camera.right_w+5,messageY,ui.camera.right_w-10,c.win_H-messageY-52)
   bottemBar()
+  effectView()
   
   if obtn.hit then 
     ui.overmapScene_Open()

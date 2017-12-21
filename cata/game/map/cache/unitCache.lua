@@ -13,7 +13,7 @@ end
 local function inbounds(unit)
   return unit.z>=grid.minZsub and unit.z<=grid.maxZsub and unit.x>=grid.minXsquare and unit.x<=grid.maxXsquare and unit.y>=grid.minYsquare and unit.y<=grid.maxYsquare 
 end
-
+gmap.isUnitInbounds  = inbounds
 
 --unit必须有xyz属性
 function gmap.leaveUnitCache(unit)

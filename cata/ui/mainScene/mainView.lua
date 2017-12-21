@@ -103,3 +103,17 @@ end
 function camera.resetToPlayerPosition()
   camera.setCenter(player.x*64,player.y*64)
 end
+
+
+function camera.focusSquare(x,y,z)
+  if z~= camera.cur_Z then
+    camera.setZ(z)
+  end
+  x = 64*x
+  y = 64*y
+  local dx = math.abs(x - camera.centerX)
+  local dy = math.abs(y - camera.centerY)
+  if dx >camera.half_seen_W or dy>camera.half_seen_H then
+    camera.setCenter(x,y)
+  end
+end

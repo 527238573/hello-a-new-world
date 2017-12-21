@@ -25,4 +25,16 @@ function ui.mainTouch()
     print("center:",touch_centerX,touch_centerY)
     io.flush()
   end
+  
+  if ui.getCurrentWindow() == ui.aimWin then 
+    --右键点击切换目标
+    if suit:mouseRightOn(touch_id) then
+      local clickx,clicky = love.mouse.getX(),love.mouse.getY()
+      ui.aimWin.rightClick(clickx,clicky)
+    end
+  else
+    --右键显示地格信息
+  end
+  
+  
 end

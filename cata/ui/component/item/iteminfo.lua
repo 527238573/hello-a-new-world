@@ -1,7 +1,7 @@
 local suit = require"ui/suit"
 --物品详细信息面板
-local iteminfo_img = love.graphics.newImage("assets/ui/iteminfo.png")
-local iteminfo_quad = suit.createS9Table(iteminfo_img,0,0,26,30,6,8,6,6)
+local iteminfo_img = ui.res.iteminfo_img
+local iteminfo_quad = ui.res.iteminfo_quad --已被通用化
 
 
 local tmpinfo ={}
@@ -47,10 +47,9 @@ end
 local function draw_iteminfo(curItem,x,y,w,h)
   love.graphics.setColor(255,255,255)
   suit.theme.drawScale9Quad(iteminfo_quad,x,y,w,h)
-  local itype = curItem.type
-  
+  local  item_img,item_quad = curItem:getImgAndQuad()
   love.graphics.setColor(255,255,255)
-  love.graphics.draw(itype.img,itype.quad,x+10,y+4,0,2,2)
+  love.graphics.draw(item_img,item_quad,x+10,y+4,0,2,2)
   love.graphics.setColor(225,225,225)
   love.graphics.setFont(c.font_c20)
   love.graphics.print(tmpinfo.name, x+79, y+18)
@@ -63,8 +62,8 @@ local function draw_iteminfo(curItem,x,y,w,h)
   love.graphics.draw(tmpinfo.info_text,x+15,y+74)
 end
 
--- 自由宽高，但要一定最小值，宽太小导致物品名字超出框，长度不够会启用滚动条
-function ui.iteminfo(curItem,x,y,w,h)
+-- 自由宽高，但要一定最小值，宽太小导致物品名字超出框，长度不够会启用滚动条 reserved_h：底部保留的高度，用于母界面 布置可操作的按钮
+function ui.iteminfo(curItem,x,y,w,h,reserved_h)
   createSnapshoot(curItem,w)
   suit:registerHitbox(nil,iteminfo_quad, x,y,w,h)
   suit:registerDraw(draw_iteminfo,curItem,x,y,w,h)--等于发送的是缓存的物品指针。源物品可能因为后续的操作逻辑被销毁或改变等。但最多存在本帧内

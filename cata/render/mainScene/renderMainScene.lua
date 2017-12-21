@@ -1,13 +1,13 @@
 render.main = {}
 local rm = render.main
-require "render/mainScene/animation/animation"
 require "render/mainScene/terrain/drawSter"
 require "render/mainScene/terrain/drawTerrain"
 require "render/mainScene/block/drawBlocks"
 require "render/mainScene/shadow/drawShadow"
+require "render/mainScene/block/drawVehicle"
+require "render/mainScene/mapEffect/drawMapEffect"
 
 function rm.init()
-  rm.initAnimation()
   rm.initDrawSter()
   rm.initDrawTerrain()
   rm.initDrawBlocks()
@@ -33,6 +33,8 @@ function render.renderMainScene()
     rm.drawLowTerrainLayer(zcache)                          --地形层
     rm.drawLowBlocksLayerUnder(zcache)                     -- low block层
     rm.drawBlocksLayerUnder(zcache)                        -- high block 层 
+    rm.drawMapEffect(curZ-1) --下一层的地图特效
+    rm.draw_AimLine(curZ-1)
     love.graphics.pop()
     rm.shiftX = 0
     rm.shiftY = 0
@@ -41,7 +43,13 @@ function render.renderMainScene()
   rm.drawTerrainLayer()                                   --地形层                         
   rm.drawLowBlocksLayer(zcache)                           -- low block层
   --提前统一build好
+  --
+  rm.drawVehicleLayer() --车辆层。
   rm.drawShadowLayer(zcache)                               --地面阴影， 
   rm.drawBlocksLayer(zcache)                               -- high block 层 
   --rm.drawShadowLayer()
+  rm.drawMapEffect(curZ)
+  rm.drawProjectiles(curZ)
+  
+  rm.draw_AimLine(curZ)
 end

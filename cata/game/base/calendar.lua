@@ -90,4 +90,8 @@ function calendar.getTimeStr()
 end
 
 
+function calendar.turn()
+  return turnpast
+end
+
 

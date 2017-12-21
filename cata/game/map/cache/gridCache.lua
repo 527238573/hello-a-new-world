@@ -77,6 +77,7 @@ function gmap.setGridCenterSquare(x,y,z)
       gmap.reloadGrid()
     end
     gmap.rebuildUnitCache()
+    gmap.rebuildEffectCache()
     gmap.zLevelCache.setAllDirty()
     gmap.minimap_dirty = true
   end

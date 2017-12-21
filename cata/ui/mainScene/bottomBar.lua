@@ -1,4 +1,4 @@
-require "ui/window/inventoryWin"
+
 
 
 local btn_charactor_opt = {id = newid()}
@@ -47,10 +47,10 @@ return function ()
   local x,y = c.win_W-288,c.win_H-50
  suit:registerDraw(drawBorderExtend,x,y)
   
-  picButton(quad_charactor,icon_img,btn_charactor_opt,x,y,46,50)
-  picButton(quad_equipment,icon_img,btn_equipment_opt,x+48,y,46,50)
+  local state_character = picButton(quad_charactor,icon_img,btn_charactor_opt,x,y,46,50)
+  local state_equipment  = picButton(quad_equipment,icon_img,btn_equipment_opt,x+48,y,46,50)
   local state_backpack  = picButton(quad_backpack,icon_img,btn_backpack_opt,x+96,y,46,50)
-  picButton(quad_quest,icon_img,btn_quest_opt,x+144,y,46,50)
+  local state_crafting = picButton(quad_quest,icon_img,btn_quest_opt,x+144,y,46,50)
   picButton(quad_help,icon_img,btn_help_opt,x+192,y,46,50)
   picButton(quad_system,icon_img,btn_system_opt,x+240,y,46,50)
   
@@ -58,10 +58,19 @@ return function ()
   local clampb = x - 364*size-4
   leftborder = math.min(leftborder,clampb)
   suit:registerDraw(drawShortCutKey,leftborder,c.win_H - 38*size,size)
-  
-  if state_backpack.hit then
-    ui.inventoryOpen()
-    
+  if state_character.hit then
+    ui.statusWin:Open("character")
   end
+  
+  if state_equipment.hit then
+    ui.statusWin:Open("equipment")
+  end
+  if state_backpack.hit then
+    ui.inventoryWin:Open()
+  end
+  if state_crafting.hit then
+    ui.craftingWin:Open()
+  end
+  
   
 end

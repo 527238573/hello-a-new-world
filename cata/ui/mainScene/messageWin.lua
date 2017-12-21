@@ -6,10 +6,11 @@ ui.res.msgWin = quads --一些共享资源
 
 local colortable=
 {
+  npc = {200,200,200},
   info = {200,200,200},
   good = {150,250,150},
   bad = {250,150,150},
-  
+  warning = {230,230,130},
 }
 
 local mFont = c.font_c16

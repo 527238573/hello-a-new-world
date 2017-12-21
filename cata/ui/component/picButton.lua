@@ -16,9 +16,10 @@ local function defaultDraw(picquad,picimg, opt, x,y,w,h,theme)
   local opstate = opt.state or "normal"
   local s9t = quads[opstate] or quads.normal
 
+  local pic_size = opt.pic_size or 2
   love.graphics.setColor(255,255,255)
 	theme.drawScale9Quad(s9t,x,y,w,h)
-  love.graphics.draw(picimg,picquad,x+6,y+6,0,2,2)
+  love.graphics.draw(picimg,picquad,x+6,y+6,0,pic_size,pic_size)
 end
 
 

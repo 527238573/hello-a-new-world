@@ -5,11 +5,14 @@ data={}--读取的数据table
 
 require"game/base/base"
 require"game/audio/audio"
+require"game/animation/animManager"
 require"game/map/omdata"--overmap terrain数据
 require"game/map/mapdata"
-require"game/unit/animData"
 require"game/map/map"
 require"game/item/inventory"
+require"game/effect/effectTypeData"
+require"game/effect/effect"
+require"game/effect/trait"
 require"game/npc/creature"--顺序
 require"game/npc/charactor"
 require"game/player/player"
@@ -17,6 +20,10 @@ require"game/camera/cameraLock"
 require"game/monster/critterTracker"
 require"game/item/itemTypeData"
 require"game/item/itemFactory"
+require"game/item/recipes/recipesData"
+require"game/other/projectile"
+require"game/playerActivity/activity"
+require"game/vehicle/vehicle"
 
 
 function g.init()
@@ -24,16 +31,21 @@ function g.init()
   data.loadAudio()
   data.loadOterData()--载入数据
   data.loadTerAndBlockData()
+  data.loadSkills()
   data.loadItemTypeData()
+  data.loadRecipeData()
   data.loadAnimationData()
   data.loadMonsterData()
+  data.loadEffectTypes()
+  data.loadVehicles()
   
-  
+  g.itemFactory.initItemFactory()
   g.newCreatedPorfile = true --提前设置好，
   g.map.init()
   
   g.player_mt.createDefaultPlayer() --先有默认的player，后面可以再替换
   g.canControl = false --ui能否发出控制命令
+  
 end
 
 function g.createGame()
@@ -61,7 +73,7 @@ end
 
 
 function g.checkControl() -- 
-  return g.curDt>g.player.delay
+  return g.curDt>g.player.delay  and player.activity==nil --处于activity中，不能控制
 end
 
 function g.preUpdate(dt)
@@ -80,15 +92,47 @@ function g.updateAnim(dt)
   g.player:updateAnim(dt)
   g.cameraLock.updateAnim(dt)
   g.monster.updateAnim(dt)
+  g.animManager.updateAnim(dt)
+  g.updateAnimDelayFucntion(dt)
 end
 
-function g.update(dt)
+local function normalUpdate(dt)
   local rl_time_past  = c.clamp(g.player.delay,0,dt)
   if rl_time_past >0 then
     g.updateRL(rl_time_past)
   end
   g.updateAnim(dt)
+  
 end
+
+local function fastForwardUpdate(dt)
+  local activity = player.activity
+  activity:updateRealTime(dt)
+  local timeUnit = activity.calcuateInterval
+  local drawInterval = activity.drawInterval or 22 --秒,5分钟  --也就是最大绘制间隔。
+  local loopTimes = math.floor(drawInterval/timeUnit)
+  for i=1,loopTimes do
+    if player.activity ==nil or player.activity~=activity or player.activity.pause or (activity.timePast/activity.totalTime>activity.realTimePast/activity.minRealTime)then --pause状态，处于UI询问中？
+      break;
+    end
+    g.updateRL(timeUnit)
+    g.updateAnim(timeUnit)
+  end
+  if player.activity then
+    --debugmsg("fastforward timeleft:"..(player.activity.totalTime-player.activity.timePast)..string.format("  %.05f",dt))
+  end
+end
+
+function g.update(dt)
+  if player.activity then
+    fastForwardUpdate(dt)
+  else
+    normalUpdate(dt)
+  end
+end
+
+
+
 
 
 function g.save()

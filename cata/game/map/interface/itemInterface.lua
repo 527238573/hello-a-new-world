@@ -1,5 +1,5 @@
 local gmap = g.map
-
+--local itemf = g.itemFactory
 
 local maxItem_per_square = 500
 
@@ -36,6 +36,8 @@ function gmap.setSquareItemList(itemlist,x,y,z)
   local ly = bit.band(y,15)
   sm.item[lx*16+ly+1] = itemlist
 end
+
+
 
 
 
@@ -85,3 +87,54 @@ function gmap.closest_xypoint_first(x,y,z,radius)
     return rx,ry,rz
   end
 end
+
+
+
+local function createASample(itemgroups)
+  local list = {}
+  for i=1,#itemgroups do
+    local it = itemgroups[i]
+    local firstItem = g.itemFactory.createItem(it[1])
+    local number = rnd(it[2],it[3])
+    if firstItem then --成功创建
+      list[#list+1]= firstItem
+      if number>1  then
+        if firstItem:can_stack() then
+          firstItem:set_stack(number)
+        else
+          --不可堆叠
+          for i=2,number do--多重创建
+            firstItem = g.itemFactory.createItem(it[1])
+            list[#list+1]= firstItem
+          end
+        end
+      end
+    end
+  end
+  return list
+end
+--生成物品，调用高消耗函数添加到地图上，注意
+--写此函数时还没定义itemgroups，使用的是bash_info的数据结构
+function gmap.spawn_items1(x,y,z,itemgroups)
+  local res,valid = gmap.hasFlag("DESTROY_ITEM",x,y,z)
+  if res then
+    return nil --被摧毁，被丢在可毁灭的地形上。
+  elseif not valid then
+    return nil --没有submap，也被摧毁
+  end
+  local list = createASample(itemgroups)--取得创建好的物品列表
+  for i=1,#list do
+    gmap.addItemToSqaure(list[i],x,y,z)--使用这个（高消耗）函数
+    --省略液体在swimmable 地格上抹掉的功能
+  end
+end
+
+
+
+
+
+
+
+
+
+

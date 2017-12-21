@@ -323,6 +323,15 @@ function suit:wheelRoll(state,info)
     self.mouse_wheel_dy = 0
   end
 end
+--不是很好的的方法，一旦上方有其他组件就会乱了逻辑， 
+function suit:wheelRollInRect(x,y,w,h,info)
+  if self:mouseInRect(x,y,w,h) and self.mouse_wheel_dy~=0 then
+    info.v_value = math.min(info.v_max, math.max(info.v_min, info.v_value -self.mouse_wheel_dy*20))
+    --self.mouse_wheel_dy = 0  --不减去防止覆盖上层滚动。 
+  end
+end
+
+
 
 
 return suit

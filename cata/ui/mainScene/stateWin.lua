@@ -1,6 +1,6 @@
 
 local suit = require"ui/suit"
-local hp_img = love.graphics.newImage("assets/ui/hpbar.png")
+local hp_img = ui.res.hpstate_img
 local spriteBatch = love.graphics.newSpriteBatch(hp_img,50,"stream")
 local hp_back_quad = love.graphics.newQuad(0,0,60,73,hp_img:getDimensions())
 
@@ -137,9 +137,9 @@ local function getHpStateCode(hp_percent)
   elseif hp_percent <=0.5 then r2 = 3
   elseif hp_percent <=0.8 then r2 = 2 end
   local r3 =1 
-  if hp_percent <=0.1 then r2= 4
-  elseif hp_percent <=0.4 then r2 = 3
-  elseif hp_percent <=0.7 then r2 = 2 end
+  if hp_percent <=0.1 then r3= 4
+  elseif hp_percent <=0.4 then r3 = 3
+  elseif hp_percent <=0.7 then r3 = 2 end
   return r1,r2,r3
 end
 
@@ -151,34 +151,36 @@ local function defaultDraw(x,y)
   love.graphics.setColor(255,255,255)
   spriteBatch:clear()
   spriteBatch:add(hp_back_quad,0,0)
+  
+  local maxhp = player:get_max_hp()
   --head 
   local r1,r2,r3
-  r1,r2,r3 = getHpStateCode(player.hp_cur[1]/player.hp_max[1])
+  r1,r2,r3 = getHpStateCode(player.hp_part["bp_head"]/player:get_max_hp("bp_head"))
   spriteBatch:add(hp_c.head[r1][1],20,3)
   spriteBatch:add(hp_c.head[r2][2],20,10)
   spriteBatch:add(hp_c.head[r3][3],20,17)
   --torso
-  r1,r2,r3 = getHpStateCode(player.hp_cur[2]/player.hp_max[2])
+  r1,r2,r3 = getHpStateCode(player.hp_part["bp_torso"]/player:get_max_hp("bp_torso"))
   spriteBatch:add(hp_c.torso[r1][1],23,27)
   spriteBatch:add(hp_c.torso[r2][2],23,36)
   spriteBatch:add(hp_c.torso[r3][3],23,44)
   --arm_l
-  r1,r2,r3 = getHpStateCode(player.hp_cur[3]/player.hp_max[3])
+  r1,r2,r3 = getHpStateCode(player.hp_part["bp_arm_l"]/player:get_max_hp("bp_arm_l"))
   spriteBatch:add(hp_c.arm[r1][1],3,27)
   spriteBatch:add(hp_c.arm[r2][2],9,27)
   spriteBatch:add(hp_c.arm[r3][3],15,27)
   --arm_r
-  r1,r2,r3 = getHpStateCode(player.hp_cur[4]/player.hp_max[4])
+  r1,r2,r3 = getHpStateCode(player.hp_part["bp_arm_r"]/player:get_max_hp("bp_arm_r"))
   spriteBatch:add(hp_c.arm[r1][3],53,27)
   spriteBatch:add(hp_c.arm[r2][2],47,27)
   spriteBatch:add(hp_c.arm[r3][1],41,27)
   --leg_l 
-  r1,r2,r3 = getHpStateCode(player.hp_cur[5]/player.hp_max[5])
+  r1,r2,r3 = getHpStateCode(player.hp_part["bp_leg_l"]/player:get_max_hp("bp_leg_l"))
   spriteBatch:add(hp_c.lleg[r1][1],17,54)
   spriteBatch:add(hp_c.lleg[r2][2],14,60)
   spriteBatch:add(hp_c.lleg[r3][3],12,66)
   --legr
-  r1,r2,r3 = getHpStateCode(player.hp_cur[6]/player.hp_max[6])
+  r1,r2,r3 = getHpStateCode(player.hp_part["bp_leg_r"]/player:get_max_hp("bp_leg_r"))
   spriteBatch:add(hp_c.lleg[r1][1],44,54,0,-1,1)
   spriteBatch:add(hp_c.lleg[r2][2],47,60,0,-1,1)
   spriteBatch:add(hp_c.lleg[r3][3],49,66,0,-1,1)
@@ -199,18 +201,76 @@ local function defaultDraw(x,y)
   love.graphics.setFont(c.font_c16)
   love.graphics.setColor(1,1,1)
   love.graphics.printf(calendar.getTimeStr(),x+100,y+5,128,"center")
-  love.graphics.print(player.speed_cur,x+155,y+33)
-  love.graphics.print(player.str_cur,x+155,y+61)
-  love.graphics.print(player.dex_cur,x+221,y+61)
-  love.graphics.print(player.int_cur,x+155,y+89)
-  love.graphics.print(player.per_cur,x+221,y+89)
+  
+  
+  local function setValueColor(value,org)
+    if value>org then
+      love.graphics.setColor(140,255,140)
+    elseif value<org then
+      love.graphics.setColor(255,140,140)
+    else
+      love.graphics.setColor(225,225,225)
+    end
+    return value
+  end
+  local value = setValueColor(player:get_speed(),player.base.speed)
+  love.graphics.print(value,x+155,y+33)
+  value = setValueColor(player:cur_str(),player.base.str)
+  love.graphics.print(value,x+155,y+61)
+  value = setValueColor(player:cur_dex(),player.base.dex)
+  love.graphics.print(value,x+221,y+61)
+  value = setValueColor(player:cur_int(),player.base.int)
+  love.graphics.print(value,x+155,y+89)
+  value = setValueColor(player:cur_per(),player.base.per)
+  love.graphics.print(value,x+221,y+89)
 end
 
+local fist_text = tl("拳头","fists")
+local picButton = require"ui/component/picButton"
+local simpleTips = require"ui/component/info/simpleTips"
+local weapon_btn_opt = {id = newid(), pic_size = 1}
 
-
-
-
+local function click_btns(x,y)--change weapon btn 和
+  local img,quad = ui.res.common_img,ui.res.common_fists
+  local size = 1
+  local text = fist_text
+  if player.weapon then
+    local witem = player.weapon
+    img,quad = witem:getImgAndQuad()
+    size =0.5
+    text = witem:getName()
+  end
+  --weapon_btn_opt.pic_size = size
+  local state = suit:S9Button(text,weapon_btn_opt,x+114,y+113,150,28) 
+  --local state = picButton(quad,img,weapon_btn_opt,x+120,y+110,44,48)
+  suit:registerDraw(function() 
+      --love.graphics.setColor(255,255,255)
+      --love.graphics.rectangle("fill",x+110,y+110,32,32)
+      
+      love.graphics.setColor(255,255,255)
+      love.graphics.draw(img,quad, x+120, y+116,0,size,size)
+      --love.graphics.setColor(55,55,55)
+      --love.graphics.setFont(c.font_c14)
+      --love.graphics.printf(text, x+146, y+118,110,"center")
+    end)
+  
+  if state.hovered then
+    simpleTips(tl("武器","Weapon"))
+  end
+  
+  
+  
+  
+  if state.hit then
+    ui.chooseItemWin:Open(tl("更换武器","Change weapon"),ui.func.weapon_eq_filter,ui.func.choose_weapon_to_wield)
+  end
+  
+  
+end
 
 function ui.stateWin(x,y)
   suit:registerDraw(defaultDraw,x,y)
+  click_btns(x,y)
+  
+  
 end

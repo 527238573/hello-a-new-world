@@ -31,6 +31,20 @@ local function defaultDraw(text, opt, x,y,w,h,theme)
 end
 
 
+local function drawDisable(text, opt, x,y,w,h,theme)
+  local opstate = "normal"
+  local s9t = quads[opstate] or quads.normal
+
+  love.graphics.setColor(190,190,190)
+	theme.drawScale9Quad(s9t,x,y,w,h)
+	love.graphics.setColor(90,90,90)
+	love.graphics.setFont(opt.font)
+
+	y = y + theme.getVerticalOffsetForAlign(opt.valign, opt.font, h-5)
+	love.graphics.printf(text, x+2, y, w-4, opt.align or "center")
+end
+
+
 return function(core, text, ...)
 	local opt, x,y,w,h = core.getOptionsAndSize(...)
 	opt.id = opt.id or text
@@ -40,7 +54,9 @@ return function(core, text, ...)
 	h = h or opt.font:getHeight() + 4
 
 	opt.state = core:registerHitbox(opt,opt.id, x,y,w,h)
-	core:registerDraw(opt.draw or defaultDraw, text, opt, x,y,w,h,core.theme)
+  
+  local drawfunc = opt.disable and drawDisable or defaultDraw
+	core:registerDraw(opt.draw or drawfunc, text, opt, x,y,w,h,core.theme)
 
 	return {
 		id = opt.id,

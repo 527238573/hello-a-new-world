@@ -58,6 +58,16 @@ function inv_mt:removeItem(item)
   return nil
 end
 
+--丢下所有物品到地图上一点，通常是怪物死了
+function inv_mt:dropAll(x,y,z)
+  for i=#self.items,1,-1 do --尝试堆叠
+    local item  = self.items[i]
+    self.items[i] = nil
+    g.map.addItemToSqaure(item,x,y,z)
+  end
+end
+
+
 --切割物品，如果是最大值就从背包中删除
 function inv_mt:sliceItem(item,num)
   if num<=0 then return nil end
@@ -130,6 +140,66 @@ function inv_mt:restack()
   end
 end
 
+--根据物品id返回数量  注意就算是可堆叠的物品根据损坏程度也可分为多组
+function inv_mt:get_item_number(id)
+  self:sort() --堆叠
+  local itype = data.itemTypes[id]
+  local num = 0
+  for i=1,#self.items do --尝试堆叠    
+    local oneitem = self.items[i]
+    if oneitem.type ==itype then
+      num = num+oneitem.stack_num   
+    end
+  end
+  return num
+end
+
+--取得一个ammo并切割出来,ammo必须是stack的
+function inv_mt:slice_one_ammo(id)
+  for i=1,#self.items do --尝试堆叠
+    local oneitem = self.items[i]
+    if oneitem.type.id ==id then
+      if oneitem.stack_num>1 then
+        self.itemDirty = true --重量变化
+        return oneitem:slice(1)
+      elseif oneitem.stack_num==1 then
+        table.remove(self.items,i)
+        self.itemDirty = true --排序不变，只有重量变
+        return oneitem
+      end--小于1视为BUG
+    end
+  end
+  --没找到返回nil
+end
+
+--取得number个物品。给予tolist。    返回剩余未达到的number。  注意tolist里的物品不堆叠也不排序。
+function inv_mt:slice_n_item(tolist,item_id,number)
+  
+  local to_del = {}
+  
+  for i=1,#self.items do --尝试堆叠
+    if number<=0 then break end --如果数量用完，返回。
+    local oneitem = self.items[i]
+    if oneitem.type.id ==item_id then
+      if oneitem.stack_num>number then
+        self.itemDirty = true --重量变化
+        table.insert(tolist,oneitem:slice(number)) --切割足够的数量，给予目标list
+        number = 0
+      else  -- 数量不足
+        table.insert(tolist,oneitem) --整个放入
+        number = number - oneitem.stack_num --减少数量。可能减为0.
+        self.itemDirty = true --排序不变，只有重量变
+        
+        table.insert(to_del,i) --需要删除的index
+      end
+    end
+  end
+  --删除相应的index，倒序
+  for i=#to_del,1,-1 do
+    table.remove(self.items,to_del[i])
+  end
+  return number
+end
 
 
 

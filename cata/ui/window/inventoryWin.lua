@@ -70,10 +70,10 @@ local function drawOneItem(num,curItem,opt, x,y,w,h)
     love.graphics.setColor(183,206,233)
     love.graphics.rectangle("fill",x,y,w,h)
   end
-  local itype = curItem.type
-
+  
+  local  item_img,item_quad = curItem:getImgAndQuad()
   love.graphics.setColor(255,255,255)
-  love.graphics.draw(itype.img,itype.quad,x+4,y,0,1,1)
+  love.graphics.draw(item_img,item_quad,x+4,y,0,1,1)
   local name = curItem:getName()
   love.graphics.setColor(22,22,22)
   love.graphics.setFont(c.font_c16)
@@ -129,23 +129,21 @@ end
 
 
 local function winClose()
-  ui.popout = nil 
-  ui.current_keypressd = nil
+  ui.inventoryWin:Close()
 end--提前声明。keyinput要用（esc退出）
 
 local function keyinput(key)
   if key=="escape" then  winClose()end
 end
-function ui.inventoryOpen()
-  ui.popout = ui.inventoryWin
-  ui.current_keypressd = keyinput
+
+local function self_open()
   --打开背包
   loaddCategory()
   loadWeightAndVolume()
 
 end
 
-function ui.inventoryWin()
+local function window_do()
   suit:DragArea(s_inv,true,s_inv.dragopt)
 
   --和drag同步。。仍在dialog前面，
@@ -172,5 +170,11 @@ function ui.inventoryWin()
   myScroll.h = (s_inv.h-78)/myScroll.itemYNum * #curList
   suit:List(myScroll,oneItem,myScroll.opt,s_inv.x+8,s_inv.y+70,s_inv.w-16,s_inv.h-78)
   if close_st.hit then winClose() end
-  
 end
+
+local new_win = ui.new_window()
+new_win.window_do = window_do
+new_win.win_open = self_open
+new_win.keyinput = keyinput
+
+ui.inventoryWin = new_win

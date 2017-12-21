@@ -75,10 +75,10 @@ local function drawOneItem(num,curItem,opt, x,y,w,h)
     love.graphics.setColor(183,206,233)
     love.graphics.rectangle("fill",x,y,w,h)
   end
-  local itype = curItem.type
 
   love.graphics.setColor(255,255,255)
-  love.graphics.draw(itype.img,itype.quad,x+4,y,0,1,1)
+  local  item_img,item_quad = curItem:getImgAndQuad()
+  love.graphics.draw(item_img,item_quad,x+4,y,0,1,1)
   local name = curItem:getName()
   if (picked_list and picked_list[curItem]) or (droped_list and droped_list[curItem]) then 
     love.graphics.setColor(22,46,175)
@@ -243,20 +243,18 @@ end
 
 local function keyinput(key)
   if s_win.popout == ui.numberAsk then ui.numberAsk_keyinput(key);return end --向子层传递
-  debugmsg("keypress:"..key)
+  --debugmsg("keypress:"..key)
   if key=="escape" or key=="q"  or (not is_pickingup and key=="g") then  winClose()end
   if key=="tab" then changePickOrDrop(not is_pickingup) end
   if key=="left" or key=="a" then keyChangeCategory(-1) end
   if key=="right" or key=="d" then keyChangeCategory(1) end
-  if key=="up" or key=="w" then keyChangeSelect(1) end
-  if key=="down" or key=="s" then keyChangeSelect(-1) end
-  if key=="e" or  (is_pickingup and key=="g") then itemSelect(curSelectIndex,false)end
+  if key=="up" or key=="w" then keyChangeSelect(-1) end
+  if key=="down" or key=="s" then keyChangeSelect(1) end
+  if key=="e" or key=="return" or (is_pickingup and key=="g") then itemSelect(curSelectIndex,false)end
   if key=="t" and is_pickingup then takeAll() end
 end
 
-function winClose()
-  ui.popout = nil 
-  ui.current_keypressd = nil
+local function self_close()
   
   --若没能通过此方式正确关闭，则回调不可用，也不能正确 delay
   callback()
@@ -281,10 +279,8 @@ function winClose()
 end
 
 --打开拾取或丢弃窗口。打开此窗口时背景操作全部关闭。is_pick表示是否是拾取，否则是丢弃。picklist是从那个list的拾取。丢弃就是从背包。recall，回调，完成后。
-function ui.pickupOrDropWinOpen(is_pick,pickList,recall)
+local function self_open(is_pick,pickList,recall)
   if pickList ==nil then debugmsg("nil picklist");return end
-  ui.popout = ui.pickupOrDropWin
-  ui.current_keypressd = keyinput
   is_pickingup = is_pick
   origin_pickList = pickList
   callback= recall
@@ -299,7 +295,7 @@ function ui.pickupOrDropWinOpen(is_pick,pickList,recall)
 end
 
 
-function ui.pickupOrDropWin()
+local function window_do()
   
   suit:registerHitFullScreen(nil,blockScreen_id)--全屏遮挡
   suit:DragArea(s_win,true,s_win.dragopt)
@@ -352,4 +348,16 @@ function ui.pickupOrDropWin()
   if takeall_st and takeall_st.hit then takeAll() end
   if s_win.popout then s_win.popout() end
   
+end
+
+local new_win = ui.new_window()
+new_win.window_do = window_do
+new_win.win_open = self_open
+new_win.win_close = self_close
+new_win.keyinput = keyinput
+
+ui.pickupOrDropWin = new_win
+
+function winClose()--替换
+  new_win:Close()
 end

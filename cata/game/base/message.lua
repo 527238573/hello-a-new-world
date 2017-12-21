@@ -23,7 +23,7 @@ function msg.addmsg(msg,msgtype)
   table.insert(message_list,1,msg_t)
   if #message_list>max_length then message_list[max_length+1] = nil end --清除末尾
 end
-  
+addmsg = msg.addmsg
   
 
 

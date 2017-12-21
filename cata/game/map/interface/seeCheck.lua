@@ -40,7 +40,7 @@ local function bresenham3d(fx,fy,fz,tx,ty,tz,interactFunc)
     end
   end
 end
-
+c.bresenham3d = bresenham3d --暂加入C，其他（远程）地方还要用
 
 
 function gmap.canSee(fx,fy,fz,tx,ty,tz,maxRange)
@@ -50,7 +50,9 @@ function gmap.canSee(fx,fy,fz,tx,ty,tz,maxRange)
   end
   local visible = true;
   gmap.zLevelCache.buildAllTransparent()
+  --if fz ~= tz then end --可能需要build floor
   local istrans = gmap.zLevelCache.isTranspant
+  local lastz = fz
   local function seeThroghSquare(x,y,z)
     if x==tx and y==ty and z==tz then return false end
     if x==fx and y==fy and z==fz then return true end
@@ -58,11 +60,21 @@ function gmap.canSee(fx,fy,fz,tx,ty,tz,maxRange)
       visible = false
       return false
     end
+    if lastz ~=z then
+      if not gmap.zLevelCache.isFloorTranspant(x,y,math.max(lastz,z)) then
+        visible = false
+        return false
+      end
+    end
+    lastz = z
     return true
   end
   bresenham3d(fx,fy,fz,tx,ty,tz,seeThroghSquare)
   return visible
 end
+
+
+
 
 
 

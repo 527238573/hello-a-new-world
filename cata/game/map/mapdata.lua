@@ -55,7 +55,7 @@ local function loadBlockTable(block_t)
       rt[3] = block_name2id[rt[3]]
     end
   end
-  
+  block_list[0] = block_name2info["f_null"] --空的block，
   
 end
 

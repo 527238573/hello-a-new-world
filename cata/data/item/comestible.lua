@@ -2,7 +2,7 @@ local list = {}
 
 list[#list+1] = {
   id = "meat",
-  name = tl("肉块","chunk of meat"),--尸体，名字会自动生成，根据怪物种类，所以此项无用
+  name = tl("肉块","chunk of meat"),
   description = tl("一块生肉。可以生吃，但烹饪更佳。","Freshly butchered meat.  You could eat it raw, but cooking it is better."),--
   item_type = "comestible",--消耗品类型
   material = "flesh",
@@ -16,7 +16,7 @@ list[#list+1] = {
 
 list[#list+1] = {
   id = "bone",
-  name = tl("骨头","bone"),--尸体，名字会自动生成，根据怪物种类，所以此项无用
+  name = tl("骨头","bone"),
   description = tl("一根某种生物的骨头。可以用来吃或做东西。","A bone from some creature or other.  Could be eaten or used to make some stuff, like needles."),--
   item_type = "comestible",--消耗品类型
   material = "bone",

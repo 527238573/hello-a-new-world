@@ -40,6 +40,10 @@ local function drawOneSquare(x,y,z)
   drawOneBlock(bid,screenx,screeny,x,y,z,itemlist)
   --if itemlist~=c.null_t and #itemlist>0 then rm.drawItem(itemlist,x,y,z,screenx,screeny) end
   if unit then rm.drawUnit(unit,x,y,z,screenx,screeny)end
+  if bid then--存在
+    local square_effect_list = g.map.getEffectListInGrid(x,y,z) 
+    if square_effect_list then rm.drawSquareEffect(square_effect_list,x,y,z) end
+  end
 end
 
 local function drawLowBlock(bid,info,x,y,z,screenx,screeny)

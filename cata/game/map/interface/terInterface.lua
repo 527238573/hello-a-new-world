@@ -66,6 +66,12 @@ function gmap.square_movecost(x,y,z)
   return move_cost
 end
 
+function gmap.impassable(x,y,z)
+  local movecost =gmap.square_movecost(x,y,z)
+  return movecost ==0 or movecost<-1 --注意-1时（地图无效时，默认仍是可pass）
+end
+
+
 --读取修改特定的ter，block
 --同时读取
 function gmap.getTerIdAndBlockId(x,y,z)
@@ -75,9 +81,9 @@ function gmap.getTerIdAndBlockId(x,y,z)
   if sm==nil then return -1,-1 end -- 不存在的地图标为-1
   local lx = bit.band(x,15)
   local ly = bit.band(y,15)
-  return sm.raw:getTer(lx,ly),sm.raw:getBlock(lx,ly)
+  return sm.raw.ter[lx][ly],sm.raw.block[lx][ly]
 end
-
+--单一读取
 
 
 
@@ -111,11 +117,116 @@ function gmap.setTerAndBlock(new_ter,new_block,x,y,z)
       local sm2 = gmap.get_submap(sx+1,sy,z)
       if sm2~=nil then sm2.dirty = true end
     end
-    
   end
   if new_block then 
     sm.raw:setBlock(new_block,lx,ly) 
   end
+  if new_ter or new_block then
+    gmap.zLevelCache.setOneLayerTransDirty(z)--改成全部
+  end
 end
+
+
+function gmap.has_floor_or_support(x,y,z)
+  local tid,bid = gmap.getTerIdAndBlockId(x,y,z)
+  if tid ==-1 then return z<=1 end --不存在的地图空中无support
+  --现在无support的地形暂为空气，室内空气
+  local ter_info = data.ster[tid]
+  return ter_info.nosupport --
+end
+
+
+
+function gmap.open_door(x,y,z,inside,checkOnly)
+  inside = inside or true
+  checkOnly = checkOnly or false
+  
+  local tid,bid = gmap.getTerIdAndBlockId(x,y,z)
+  local ter_info = data.ster[tid]
+  local block_info = data.block[bid]
+  if ter_info.open_door then
+    local newinfo = data.ster_name2info[ter_info.open_door]
+    if newinfo == nil then
+      debugmsg(string.format("wrong open_door name :%s ,at terrain:%s",ter_info.open_door,ter_info.name))
+      return false
+    end
+    if ter_info["OPENCLOSE_INSIDE"] and inside==false then
+      return false --只能在内部打开
+    end
+    
+    if not checkOnly then
+      gmap.setTerAndBlock(ter_info.open_door,nil,x,y,z)
+      local sound_id = ter_info.open_door_sound or "dooropen1"--默认值
+      g.playSound(sound_id,true,x,y,z)
+    end
+    return true
+  elseif bid>1 and block_info.open_door then
+    local newinfo = data.block_name2info[block_info.open_door]
+    if newinfo == nil then
+      debugmsg(string.format("wrong open_door name :%s ,at block:%s",block_info.open_door,block_info.name))
+      return false
+    end
+    if block_info["OPENCLOSE_INSIDE"] and inside==false then
+      return false --只能在内部打开
+    end
+    if not checkOnly then
+      gmap.setTerAndBlock(nil,block_info.open_door,x,y,z)
+      local sound_id = block_info.open_door_sound or "dooropen1"
+      g.playSound(sound_id,true,x,y,z)
+    end
+    return true
+  end
+  return false
+  --省略开车门
+end
+
+
+function gmap.close_door(x,y,z,inside,checkOnly)
+  inside = inside or true
+  checkOnly = checkOnly or false
+  
+  local tid,bid = gmap.getTerIdAndBlockId(x,y,z)
+  local ter_info = data.ster[tid]
+  local block_info = data.block[bid]
+  if ter_info.close_door then
+    local newinfo = data.ster_name2info[ter_info.close_door]
+    if newinfo == nil then
+      debugmsg(string.format("wrong close_door name :%s ,at terrain:%s",ter_info.close_door,ter_info.name))
+      return false
+    end
+    if ter_info["OPENCLOSE_INSIDE"] and inside==false then
+      return false --只能在内部打开
+    end
+    
+    if not checkOnly then
+      gmap.setTerAndBlock(ter_info.close_door,nil,x,y,z)
+      local sound_id = ter_info.close_door_sound or "doorclose1"--默认值
+      g.playSound(sound_id,true,x,y,z)
+    end
+    return true
+  elseif bid>1 and block_info.close_door then
+    local newinfo = data.block_name2info[block_info.close_door]
+    if newinfo == nil then
+      debugmsg(string.format("wrong close_door name :%s ,at block:%s",block_info.close_door,block_info.name))
+      return false
+    end
+    if block_info["OPENCLOSE_INSIDE"] and inside==false then
+      return false --只能在内部打开
+    end
+    if not checkOnly then
+      gmap.setTerAndBlock(nil,block_info.close_door,x,y,z)
+      local sound_id = block_info.close_door_sound or "doorclose1"
+      g.playSound(sound_id,true,x,y,z)
+    end
+    return true
+  end
+  return false
+end
+
+
+
+
+
+
 
 

@@ -15,6 +15,7 @@ c.Z_MAX = 12  -- 最高层     1楼= 地面 （z=1）,z<=0为地下
 c.Z_MIN = -10 --最低 层
 
 c.font_c20 = love.graphics.newFont("assets/fzh.ttf",20);
+c.font_c18 = love.graphics.newFont("assets/fzh.ttf",18);
 c.font_c16 = love.graphics.newFont("assets/fzh.ttf",16);
 c.font_c14 = love.graphics.newFont("assets/fzh.ttf",14);
 --c.font_c12 = love.graphics.newFont("assets/fzh.ttf",12);
@@ -25,8 +26,12 @@ c.font_x14 = love.graphics.newFont("assets/fzfs.ttf",14);
 
 
 c.null_t = {}
-c.timeSpeed = 2.25
+c.timeSpeed = 2.25 --行动点数，速度 和实际时间的换算  （行动点数/速度/tiemspeed = 实际时间）（回合数 = 实际时间秒*timeSpeed）1回合 = 0.444
 c.face_table = {7,6,5,8,1,4,1,2,3}
+
+function c.face(dx,dy)
+  return c.face_table[(dy+1)*3 +dx+2]
+end
 
 function c.clamp(x,min,max)
   return x>max and max or x<min and min or x
@@ -40,7 +45,7 @@ function c.dist_3d(x1,y1,z1,x2,y2,z2)
 end
 
 
-function tl(str)
+function tl(str,str2)
   return str
 end
 
@@ -59,7 +64,22 @@ end
 
 --全局变量 随机函数
 rnd = love.math.random
+function rnd_float(f1,f2)
+  return f1+(f2-f1)*rnd()
+end
+
 function one_in(num)  return rnd(num)<=1 end
+
+function x_in_y(x,y) return rnd()<=(x/y) end
+--掷骰子
+function dice(number,side)
+  local ret =0
+  for i=1,number do
+    ret = ret+rnd(1,side)
+  end
+  return ret
+end
+
 
 function c.random_shuffle(t)
   local length  = #t
@@ -154,4 +174,13 @@ function fid(name)
   return id
 end
 
+
+
+function flagt(ftable)
+  local nt = {}
+  for k,v in ipairs(ftable) do
+    nt[v] = true
+  end
+  return nt
+end
 

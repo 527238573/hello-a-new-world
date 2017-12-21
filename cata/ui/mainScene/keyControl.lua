@@ -30,8 +30,18 @@ function ui.mainKeypressed(key)
     ui.camera.setZ( ui.camera.cur_Z-1)
   elseif key=="g" then
     player:pickOrDrop(0,0)--启动
+  elseif key=="f" then
+    player:fastShotAction()--快速射击
+  elseif key=="v" then
+    player:openAimWinAction()--瞄准模式，进入
+  elseif key=="r" then
+    player:reloadAction() --重装
   elseif key=="e" then
-    --ui.pickupOrDropWinOpen(false)
+    --ui.pickupOrDropWin:Open(false)
+  elseif key=="b" then
+    if not love.mouse.isDown(1) then player:Bash() end
+  elseif key=="c" then
+    if not love.mouse.isDown(1) then player:close_door() end
   end
   
   
@@ -40,8 +50,18 @@ end
 
 
 function ui.mainKeyCheck(dt)
+  if ui.show_console then return end
+  
   if g.checkControl() == false then return end
-  if ui.current_keypressd then return end--焦点不在主界面
+  if ui.keyOnWindow() then return end--焦点不在主界面
+  
+  --是否连射
+  
+  if love.keyboard.isDown("f") then
+    player:fastBurstShotAction()
+  elseif player:needBurst() then --最小burst没走完
+    player:fastBurstShotAction()
+  end
   
   for i=1,4 do
     if(love.keyboard.isDown(priority[i])) then
@@ -120,7 +140,7 @@ function ui.mainKeyCheck(dt)
     
     
   end
-  if ui.popout ==nil then --更流畅的操作
+  if not ui.keyOnWindow() then --更流畅的操作
     ui.key_g_delay =ui.key_g_delay -dt
     if ui.key_g_delay<=0 and love.keyboard.isDown("g") then
         player:pickOrDrop(0,0)--启动 
